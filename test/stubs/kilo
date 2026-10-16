@@ -1,0 +1,2 @@
+#!/bin/sh
+FAKE_NAME=kilo exec node "$(dirname "$0")/fake-cli.js" "$@"

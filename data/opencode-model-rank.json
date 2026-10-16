@@ -1,0 +1,97 @@
+{
+ "_note": "opencode-auto 免费模型能力分（2026-10-16 重建）。score = 2×AA Intelligence Index；evidence: measured=AA 实测, proxy=同模型其它档/基座代理, vendor=仅厂商自报（试用期）, none=无评测（试用期）。门槛与新模型规则见 lib/gate.js 与 README。",
+ "baseline": {
+  "scale": "score = 2 × AA Intelligence Index v4.3.x（满分 100 ≈ AA 50）",
+  "min_score": 60,
+  "min_score_meaning": "AA ≥ 30",
+  "agentic_floor": "Terminal-Bench 4.0（AA 测）≥ 10%；无 TB 数据时 AA Agentic Index ≥ 15",
+  "provisional": "无评测模型：估分 ≥ 50 可进轮换但排在所有达标模型之后；本机 ≥5 次且成功率 ≥80% 转正，<50% 降 15 分",
+  "env": "MODEL_MIN_SCORE / MODEL_MIN_TB / MODEL_MIN_AGENTIC / MODEL_PROVISIONAL / MODEL_PROVISIONAL_SLACK；MODEL_MIN_SCORE=0 临时关门槛；-m 不受限",
+  "updated": "2026-10-16"
+ },
+ "models": {
+  "opencode/step-5-preview-free": {
+   "score": 87.4,
+   "aa": 43.7,
+   "tb": 33.3,
+   "evidence": "measured",
+   "source": "AA 43.7（OpenRouter /api/v1/models benchmarks.artificial_analysis（AA Intelligence Index v4.3.2），2026-10-16 拉取）；AA 测 Terminal-Bench 4.0 33.3%；StepFun 官方 DeepSWE v1.1 67.7%",
+   "date": "2026-10-16"
+  },
+  "opencode/muse-spark-1.3-contributor-free": {
+   "score": 85,
+   "agentic": 55.5,
+   "evidence": "proxy",
+   "source": "Contributor 是 Muse Spark 1.3 的数据共享低价档（$0.10/$0.20，同一模型，Meta 可用对话训练），AA/OpenRouter 未单独测；按付费 Muse Spark 1.3 (xhigh) AA 45 计（max 档 48.1，Agentic 55.5，OpenRouter 2026-10-16）再扣 5 分代理折价 → 85。freetokens.fyi 10-07 实测 OpenCode 内可完成真实编码任务，但需登录且开训练授权，否则报错——靠本机反馈兜底",
+   "date": "2026-10-16"
+  },
+  "opencode/ling-3.1-flash-free": {
+   "score": 82.2,
+   "aa": 41.1,
+   "tb": 33,
+   "evidence": "measured",
+   "source": "AA 41.1（OpenRouter /api/v1/models benchmarks.artificial_analysis（AA Intelligence Index v4.3.2），2026-10-16 拉取）；AA 测 Terminal-Bench 4.0 33%；560B/25B",
+   "date": "2026-10-16"
+  },
+  "opencode/mimo-v2.6-flash-free": {
+   "score": 75.8,
+   "aa": 37.9,
+   "tb": 23,
+   "evidence": "measured",
+   "source": "AA 37.9（OpenRouter /api/v1/models benchmarks.artificial_analysis（AA Intelligence Index v4.3.2），2026-10-16 拉取）；AA 测 Terminal-Bench 4.0 23%（artificialanalysis.ai/models/mimo-v2-6-flash）",
+   "date": "2026-10-16"
+  },
+  "opencode/longcat-2.5-preview-free": {
+   "score": 50,
+   "evidence": "none",
+   "source": "无官方/AA 评测（benchmarklist、openvibeeval 均为 —，2026-10-16 查询）；前代 LongCat 2.0 AA 19.1/Agentic 14；第三方 AI Coding Daily 10-02 经 OpenCode 测 46.65/80 第 36（与 GLM-5.3-Flash 相当）→ 试用期 50",
+   "date": "2026-10-16"
+  },
+  "opencode/big-pickle": {
+   "score": 55,
+   "evidence": "none",
+   "source": "OpenCode Zen 隐身模型，背后模型会变（2026-08 传为 DeepSeek V4 Flash）；无 AA；第三方 fellipesoares.com.br 10 月测 Terminal-Bench 71% → 试用期 55（2026-10-16）",
+   "date": "2026-10-16"
+  },
+  "opencode/nemotron-3-ultra-free": {
+   "score": 45.8,
+   "aa": 22.9,
+   "agentic": 20.1,
+   "evidence": "measured",
+   "source": "AA 22.9、Agentic 20.1、Coding 49.3（OpenRouter /api/v1/models benchmarks.artificial_analysis（AA Intelligence Index v4.3.2），2026-10-16 拉取）；550B/55B，参数大但实测弱于门槛",
+   "date": "2026-10-16"
+  },
+  "opencode/space-bunny-free": {
+   "score": 50,
+   "evidence": "none",
+   "source": "隐身模型，无公开评测（2026-10-16）；试用期",
+   "date": "2026-10-16"
+  },
+  "opencode/cat-jam-free": {
+   "score": 50,
+   "evidence": "none",
+   "source": "隐身模型，无公开评测（2026-10-16）；试用期",
+   "date": "2026-10-16"
+  },
+  "opencode/exo-free": {
+   "score": 50,
+   "evidence": "none",
+   "source": "无公开评测（2026-10-16）；试用期",
+   "date": "2026-10-16"
+  },
+  "opencode/ling-3.0-flash-fin-free": {
+   "score": 40,
+   "evidence": "proxy",
+   "source": "金融微调版，无独立评测；基座 Ling 3.0 Flash AA 20.1、Agentic 19.3（OpenRouter /api/v1/models benchmarks.artificial_analysis（AA Intelligence Index v4.3.2），2026-10-16 拉取）→ 40，不进轮换",
+   "date": "2026-10-16"
+  },
+  "opencode/nemotron-3.5-lightning-free": {
+   "score": 25.8,
+   "aa": 12.9,
+   "agentic": 3.5,
+   "evidence": "measured",
+   "source": "AA 12.9、Agentic 3.5（OpenRouter /api/v1/models benchmarks.artificial_analysis（AA Intelligence Index v4.3.2），2026-10-16 拉取）；31.6B/3.6B",
+   "date": "2026-10-16"
+  }
+ }
+}

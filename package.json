@@ -1,0 +1,10 @@
+{
+  "name": "free-agent-crew",
+  "version": "1.1.0",
+  "description": "Dispatch free-model coding CLIs (cline, kilo, opencode) as a crew: quota-aware model fallback, review/brainstorm/relay/ask, doctor, cross-platform installer.",
+  "bin": { "crew": "bin/crew.js" },
+  "engines": { "node": ">=18" },
+  "scripts": { "test": "node --test test/*.test.js" },
+  "license": "MIT",
+  "dependencies": {}
+}

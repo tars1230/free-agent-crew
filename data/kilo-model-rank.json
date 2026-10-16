@@ -1,0 +1,101 @@
+{
+ "_note": "kilo-auto 免费模型能力分（2026-10-16 重建）。score = 2×AA Intelligence Index；evidence: measured=AA 实测, proxy=同模型其它档/基座代理, vendor=仅厂商自报（试用期）, none=无评测（试用期）。门槛与新模型规则见 lib/gate.js 与 README。",
+ "baseline": {
+  "scale": "score = 2 × AA Intelligence Index v4.3.x（满分 100 ≈ AA 50）",
+  "min_score": 60,
+  "min_score_meaning": "AA ≥ 30",
+  "agentic_floor": "Terminal-Bench 4.0（AA 测）≥ 10%；无 TB 数据时 AA Agentic Index ≥ 15",
+  "provisional": "无评测模型：估分 ≥ 50 可进轮换但排在所有达标模型之后；本机 ≥5 次且成功率 ≥80% 转正，<50% 降 15 分",
+  "env": "MODEL_MIN_SCORE / MODEL_MIN_TB / MODEL_MIN_AGENTIC / MODEL_PROVISIONAL / MODEL_PROVISIONAL_SLACK；MODEL_MIN_SCORE=0 临时关门槛；-m 不受限",
+  "updated": "2026-10-16"
+ },
+ "models": {
+  "kilo/stepfun/step-5-preview-free": {
+   "score": 87.4,
+   "aa": 43.7,
+   "tb": 33.3,
+   "evidence": "measured",
+   "source": "AA 43.7（OpenRouter /api/v1/models benchmarks.artificial_analysis（AA Intelligence Index v4.3.2），2026-10-16 拉取）；AA 测 Terminal-Bench 4.0 33.3%；StepFun 官方 DeepSWE v1.1 67.7%",
+   "date": "2026-10-16"
+  },
+  "kilo/inclusionai/ling-3.1-flash": {
+   "score": 82.2,
+   "aa": 41.1,
+   "tb": 33,
+   "evidence": "measured",
+   "source": "AA 41.1（OpenRouter /api/v1/models benchmarks.artificial_analysis（AA Intelligence Index v4.3.2），2026-10-16 拉取）；AA 测 Terminal-Bench 4.0 33%；560B/25B",
+   "date": "2026-10-16"
+  },
+  "kilo/nvidia/nemotron-3-ultra-550b-a55b:free": {
+   "score": 45.8,
+   "aa": 22.9,
+   "agentic": 20.1,
+   "evidence": "measured",
+   "source": "AA 22.9、Agentic 20.1、Coding 49.3（OpenRouter /api/v1/models benchmarks.artificial_analysis（AA Intelligence Index v4.3.2），2026-10-16 拉取）；550B/55B，参数大但实测弱于门槛",
+   "date": "2026-10-16"
+  },
+  "kilo/poolside/laguna-s-2.1:free": {
+   "score": 55,
+   "evidence": "vendor",
+   "source": "无 AA 分数（OpenRouter 无 benchmarks）。Poolside 自报 Terminal-Bench 2.1 70.2%、SWE-bench Pro 59.4%、Toolathlon 49.7%（自家 harness，poolside.ai/blog/introducing-laguna-s-2-1，2026-07-21）；同表 Inkling 63.8%/Nemotron 3 Ultra 56.4% 对应 AA 25/22.9，推算 AA≈26–30 → 试用期 55，2026-10-16",
+   "date": "2026-10-16"
+  },
+  "kilo/nvidia/nemotron-3-super-120b-a12b:free": {
+   "score": 25.6,
+   "aa": 12.8,
+   "agentic": 1.7,
+   "evidence": "measured",
+   "source": "AA 12.8、Agentic 1.7（OpenRouter /api/v1/models benchmarks.artificial_analysis（AA Intelligence Index v4.3.2），2026-10-16 拉取）",
+   "date": "2026-10-16"
+  },
+  "kilo/stealth/glyph-cluster": {
+   "score": 50,
+   "evidence": "none",
+   "source": "隐身模型，无任何公开评测（2026-10-16 查询）；试用期，排在达标模型之后，本机反馈决定去留",
+   "date": "2026-10-16"
+  },
+  "kilo/cohere/north-mini-code:free": {
+   "score": 19.8,
+   "aa": 9.9,
+   "agentic": 1.1,
+   "evidence": "measured",
+   "source": "AA 9.9、Coding 36.5、Agentic 1.1（OpenRouter /api/v1/models benchmarks.artificial_analysis（AA Intelligence Index v4.3.2），2026-10-16 拉取）",
+   "date": "2026-10-16"
+  },
+  "kilo/thinkingmachines/inkling-small:free": {
+   "score": 51.4,
+   "aa": 25.7,
+   "agentic": 23.5,
+   "evidence": "measured",
+   "source": "AA 25.7、Coding 52.9、Agentic 23.5（OpenRouter /api/v1/models benchmarks.artificial_analysis（AA Intelligence Index v4.3.2），2026-10-16 拉取）；AA 文章称与 Nemotron 3.5 Super VL 同档",
+   "date": "2026-10-16"
+  },
+  "kilo/dots-studio/dots-3-note-preview:free": {
+   "score": 38,
+   "evidence": "none",
+   "source": "无评测（OpenRouter 无 benchmarks，2026-10-16）；笔记/写作定位，估分 50−12 → 不进轮换",
+   "date": "2026-10-16"
+  },
+  "kilo/poolside/laguna-xs-2.1:free": {
+   "score": 40,
+   "evidence": "none",
+   "source": "无评测；Laguna 最小档 XS，按 Laguna S 试用分 55 减档位 15 → 不进轮换（2026-10-16）",
+   "date": "2026-10-16"
+  },
+  "kilo/nvidia/nemotron-3.5-lightning:free": {
+   "score": 25.8,
+   "aa": 12.9,
+   "agentic": 3.5,
+   "evidence": "measured",
+   "source": "AA 12.9、Agentic 3.5（OpenRouter /api/v1/models benchmarks.artificial_analysis（AA Intelligence Index v4.3.2），2026-10-16 拉取）；31.6B/3.6B",
+   "date": "2026-10-16"
+  },
+  "kilo/nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free": {
+   "score": 20.6,
+   "aa": 10.3,
+   "evidence": "measured",
+   "source": "AA 10.3（OpenRouter /api/v1/models benchmarks.artificial_analysis（AA Intelligence Index v4.3.2），2026-10-16 拉取）",
+   "date": "2026-10-16"
+  }
+ }
+}
