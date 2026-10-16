@@ -35,3 +35,5 @@
 | 31 | kilo 限额按请求数、我们只能数调用 | **部分处理**：显示“本小时调用 x 次”并注明单次调用可能含多次请求，只作下限参考 |
 | 32 | 托盘跨平台 | macOS 本机编译+LaunchAgent（无 swiftc 跳过并提示）；Windows NotifyIcon+启动文件夹，重装/卸载时旧实例自行退出不强杀；Linux 不装常驻程序只给状态栏示例。Windows/Linux **未实机测试** |
 | 33 | 试用期转正只看 AGENT_EVENTS_LOG | 刻意未改：crew 自己的 events.jsonl 暂不参与转正判断，避免行为变化；需要时把 `AGENT_EVENTS_LOG` 指向它 |
+| 34 | 自定义 npm 全局目录不在 PATH 上，装完却显示“未安装” | v1.3.1：除 PATH 外，还会去 `NPM_CONFIG_PREFIX`、`~/.npmrc` 里的 `prefix=` 和 `~/.free-agent-crew/npm-global` 找 CLI；这是在临时 HOME 里从零安装时发现的 |
+| 35 | 国内网络、公司镜像 | v1.3.1：新增 `CREW_NPM_REGISTRY`、`CREW_NODE_MIRROR`；Windows 下载 Node 时会使用 `HTTPS_PROXY`；`docs/REQUIREMENTS.md` 写明了所有联网地址、要不要登录、离线安装方法 |

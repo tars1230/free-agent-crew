@@ -3,13 +3,13 @@ name: free-agent-crew
 description: Dispatch three free-model coding CLIs (cline, kilo, opencode) as a crew for independent second opinions, parallel code/document review, brainstorming, draft→critique→finalize relays and do-then-cross-review, at zero model cost. Quota/429 fallback, cooldowns, timeouts and a capability gate are automatic. Use when you want an independent review, more ideas, or to offload a self-contained subtask without spending your own tokens.
 license: MIT
 metadata:
-  version: "1.3.0"
+  version: "1.3.1"
 ---
 <!-- free-agent-crew-skill v2 -->
 
 # free-agent-crew：免费员工调度
 
-三个免费"员工"：**kilo**（免登录，按 IP 每小时约 200 次请求）、**opencode**（免登录，按 IP 按天）、**cline**（需 Cline 账号，按账号/模型/天）。`crew` 自动拉免费模型名单、按能力排序、额度用完自动换模型/换员工、记录冷却。
+三个免费"员工"：**kilo**（免登录，按 IP 每小时约 200 次请求）、**opencode**（免登录，按出口 IP 共享限额，官方未公布数字）、**cline**（需 Cline 账号，按账号/模型/天）。`crew` 自动拉免费模型名单、按能力排序、额度用完自动换模型/换员工、记录冷却。
 
 ## 1. 先体检
 ```bash

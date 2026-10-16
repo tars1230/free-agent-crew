@@ -3,28 +3,35 @@
 把三个免费模型编程 CLI（**cline / kilo / opencode**）变成总控 agent（WorkBuddy、Claude Code、Codex、Hermes……）可直接派活的“员工团队”：
 自动发现免费模型 → 按能力排序 → 额度/429 自动换模型、换员工 → 记录冷却 → 汇总结果。单一 Node.js 实现，macOS / Linux / Windows 通用，零 npm 依赖。
 
+## 三步上手
+1. **拿到 zip 并安装**：`free-agent-crew-1.3.1.zip` 可以来自 GitHub Release（私有仓库，要先 `gh auth login`，再运行 `gh release download -R tars1230/free-agent-crew -p 'free-agent-crew-[0-9]*.zip'` 下载最新版）、网盘，或别人直接发给你。解压到 Downloads 后运行（命令见下方「一句话安装」）：macOS / Linux 用 `sh ~/Downloads/free-agent-crew/install.sh`，Windows 用 `powershell -ExecutionPolicy Bypass -File $HOME\Downloads\free-agent-crew\install.ps1`。要状态栏或托盘就加 `--tray`。国内网络先看 [docs/REQUIREMENTS.md](docs/REQUIREMENTS.md) 设置代理或镜像。
+2. **登录 cline（只要一次）**：新开一个终端，运行 `cline auth`，在浏览器登录 Cline 账号（免费注册）。kilo 和 opencode 不用登录。然后运行 `crew doctor`，“需要你做的事”为空就好了。
+3. **让总控 agent 派活**：安装器已经把 skill 装进本机已有的 Claude Code / Codex / WorkBuddy 等技能目录，直接对总控 agent 说“用 free-agent-crew 让免费员工复核 src/x.ts”即可；可复制的派单模板在 [prompts/](prompts/README.md)。想看谁还有额度：运行 `crew quota`。
+
+出问题：先运行 `crew doctor`，再看 [skill 故障排查](skills/free-agent-crew/references/troubleshooting.md) 和 [docs/REQUIREMENTS.md](docs/REQUIREMENTS.md)。
+
 ## 三个板块
 
 | 板块 | 目录 | 用途 | 入口 |
 |---|---|---|---|
-| 工具 / 安装包 | `bin/` `lib/` `install.sh` `install.ps1` `data/` `test/` | `crew` 命令本体：调度、额度切换、能力门槛、体检、跨平台安装 | 下载 `free-agent-crew-1.3.0.zip` → 运行安装脚本（见下） |
-| Skill | `skills/free-agent-crew/`（`SKILL.md` + `references/`） | 让 Claude Code、Codex、WorkBuddy/CodeBuddy、Hermes、opencode、cline、kilo 等 agent 知道何时、怎样派活给 `crew` | 安装脚本自动装到各 agent 的技能目录；只装 skill：解压 `free-agent-crew-skill-1.3.0.zip` 到技能目录 |
+| 工具 / 安装包 | `bin/` `lib/` `install.sh` `install.ps1` `data/` `test/` | `crew` 命令本体：调度、额度切换、能力门槛、体检、跨平台安装 | 下载 `free-agent-crew-1.3.1.zip` → 运行安装脚本（见下） |
+| Skill | `skills/free-agent-crew/`（`SKILL.md` + `references/`） | 让 Claude Code、Codex、WorkBuddy/CodeBuddy、Hermes、opencode、cline、kilo 等 agent 知道何时、怎样派活给 `crew` | 安装脚本自动装到各 agent 的技能目录；只装 skill：解压 `free-agent-crew-skill-1.3.1.zip` 到技能目录 |
 | 提示词 | `prompts/` | 给总控 agent 直接复制的派单模板：新设备安装、单员工、互审、脑暴、接力、做-审分离 | 打开 [`prompts/README.md`](prompts/README.md) |
 
-其他：`docs/BLINDSPOTS.md` 盲区清单；`LICENSE`（MIT）。
+其他：`docs/REQUIREMENTS.md` 下载来源、注册登录、网络要求与离线安装；`docs/TRAY.md` 托盘；`docs/BLINDSPOTS.md` 盲区清单；`LICENSE`（MIT）。
 
 ## 一句话安装
 macOS / Linux：
 ```sh
-unzip -o free-agent-crew-1.3.0.zip -d ~/Downloads && sh ~/Downloads/free-agent-crew/install.sh
+unzip -o free-agent-crew-1.3.1.zip -d ~/Downloads && sh ~/Downloads/free-agent-crew/install.sh
 ```
 Windows（PowerShell）：
 ```powershell
-Expand-Archive -Force free-agent-crew-1.3.0.zip $HOME\Downloads; powershell -ExecutionPolicy Bypass -File $HOME\Downloads\free-agent-crew\install.ps1
+Expand-Archive -Force free-agent-crew-1.3.1.zip $HOME\Downloads; powershell -ExecutionPolicy Bypass -File $HOME\Downloads\free-agent-crew\install.ps1
 ```
-安装器是幂等的，重复运行=修复/升级。参数：`--no-cli`（不装三个 CLI）`--no-path` `--no-skills` `--upgrade`（升级 CLI）`--registry URL` `--force`（覆盖同名技能）。
+安装器是幂等的，重复运行=修复/升级。参数：`--no-cli`（不装三个 CLI）`--no-path` `--no-skills` `--upgrade`（升级 CLI）`--registry URL`（也可设环境变量 `CREW_NPM_REGISTRY`）`--force`（覆盖同名技能）`--tray` / `--uninstall-tray`。Node 下载镜像用 `CREW_NODE_MIRROR`，代理用 `HTTPS_PROXY`，详见 [docs/REQUIREMENTS.md](docs/REQUIREMENTS.md)。
 
-安装后只剩一件人工的事：**cline 需要登录一次**（`cline auth`）。kilo、opencode 免登录。`crew doctor` 会把要做的事列清楚。
+安装后只剩一件人工的事：**cline 需要登录一次**（`cline auth`，需要 Cline 账号，可免费注册）。kilo、opencode 免登录。`crew doctor` 会把要做的事列清楚。
 
 ## 它做了什么
 | 步骤 | 说明 |
@@ -71,7 +78,7 @@ cline-auto|kilo-auto|opencode-auto ...   # 与原 CLI 参数一致 + 自动换�
 - 恢复时间：只认**未来**的时间戳（日志里的 `"ts"` 过去时间不算）→ “try again in 5h 29m” → retry-after → 默认（cline/opencode 到下一个 UTC 0 点；kilo 到下一个整点）。
 - 状态文件 `~/.free-agent-crew/state/*-quota-state.json`：mkdir 锁 + 临时文件原子替换；损坏/非对象/时钟回拨产生的记录自动忽略。
 
-## 额度面板与托盘（v1.3.0）
+## 额度面板与托盘（v1.3.1）
 - 每次调用都写事件到 `~/.free-agent-crew/logs/events.jsonl`（可用 `CREW_EVENTS_LOG` 改位置）：一行一个 JSON，字段 `ts agent caller session_id model event rc duration tokens run`（与常见 agent-events.jsonl 格式一致，**不记录任务内容**）；`crew quota` 只读这些记录和冷却状态。
 - 颜色：🟢 有达标模型可用 · 🟡 达标模型都在冷却只剩试用期模型（或门槛模块出错）· 🔴 没有可用模型 · ⚪ 没数据（未安装/从没用过）。kilo 的“本小时调用”按调用次数计，限额按请求数算，只是下限参考。
 - 托盘：macOS 菜单栏（本机 swiftc 编译，已实测）；Windows 通知区域（PowerShell + .NET NotifyIcon，启动文件夹自启，**未在 Windows 实机测试**）；Linux 不装常驻程序，给 waybar/polybar/i3blocks/tmux/GNOME 接 `crew quota --line` 的示例（**未实机测试**）。详见 `docs/TRAY.md`。
@@ -81,7 +88,7 @@ cline-auto|kilo-auto|opencode-auto ...   # 与原 CLI 参数一致 + 自动换�
 
 ## 测试
 ```sh
-npm test                    # node:test，59 个用例：额度面板各颜色与计数/事件记录/macOS 托盘真实编译并沙箱运行/假 CLI 覆盖切换/75/124/77/127/stdin/act 模式/并发锁/Windows shim 与 PATH 逻辑/skill 结构与安装/能力门槛（排除、试用期排序、评测拉取失败回落、--model 绕过）
+npm test                    # node:test，60 个用例：自定义 npm 目录查找/额度面板各颜色与计数/事件记录/macOS 托盘真实编译并沙箱运行/假 CLI 覆盖切换/75/124/77/127/stdin/act 模式/并发锁/Windows shim 与 PATH 逻辑/skill 结构与安装/能力门槛（排除、试用期排序、评测拉取失败回落、--model 绕过）
 sh test/docker-linux.sh     # 有 docker 时在一次性容器里跑测试和安装
 ```
 

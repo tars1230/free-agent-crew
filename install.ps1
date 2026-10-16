@@ -20,15 +20,20 @@ function Find-Node {
 }
 function Install-PortableNode {
   $arch = if ($env:PROCESSOR_ARCHITECTURE -eq 'ARM64') { 'arm64' } else { 'x64' }
-  foreach ($base in 'https://nodejs.org/dist/latest-v22.x', 'https://npmmirror.com/mirrors/node/latest-v22.x') {
+  # CREW_NODE_MIRROR is tried first; HTTPS_PROXY/HTTP_PROXY is passed to Invoke-WebRequest (PowerShell 5.1 ignores those variables by itself)
+  $bases = @($env:CREW_NODE_MIRROR, 'https://nodejs.org/dist/latest-v22.x', 'https://npmmirror.com/mirrors/node/latest-v22.x') | Where-Object { $_ }
+  # Windows PowerShell 5.1 on older systems may not offer TLS 1.2, which nodejs.org / npmmirror require
+  try { [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12 } catch {}
+  $px = @{}; $pv = if ($env:HTTPS_PROXY) { $env:HTTPS_PROXY } elseif ($env:HTTP_PROXY) { $env:HTTP_PROXY } else { $null }; if ($pv) { $px.Proxy = $pv }
+  foreach ($base in $bases) {
     try {
       Write-Host "下载便携 Node 22 (win-$arch) from $base ..."
-      $sums = (Invoke-WebRequest -UseBasicParsing -TimeoutSec 30 "$base/SHASUMS256.txt").Content
+      $sums = (Invoke-WebRequest -UseBasicParsing -TimeoutSec 30 -ErrorAction Stop @px -Uri "$base/SHASUMS256.txt").Content
       $line = ($sums -split "`r?`n" | ForEach-Object { $_.Trim() }) | Where-Object { $_ -match "node-v[\d.]+-win-$arch\.zip$" } | Select-Object -First 1
       if (-not $line) { continue }
       $want, $file = ($line.Trim() -split '\s+')[0, 1]
       $tmp = Join-Path $env:TEMP $file
-      Invoke-WebRequest -UseBasicParsing -TimeoutSec 600 "$base/$file" -OutFile $tmp
+      Invoke-WebRequest -UseBasicParsing -TimeoutSec 600 -ErrorAction Stop @px -Uri "$base/$file" -OutFile $tmp
       if ((Get-FileHash -Algorithm SHA256 $tmp).Hash.ToLower() -ne $want.ToLower()) { Write-Host '校验失败，换源'; continue }
       $dst = Join-Path $CrewHome 'node'; $new = "$dst.new"
       if (Test-Path $new) { Remove-Item -Recurse -Force $new }

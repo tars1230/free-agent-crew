@@ -33,7 +33,8 @@ install_portable_node() {
   case "$arch" in x86_64|amd64) arch=x64 ;; arm64|aarch64) arch=arm64 ;; armv7l) arch=armv7l ;; *) say "不支持的 CPU: $arch"; return 1 ;; esac
   case "$os" in darwin|linux) ;; *) say "不支持的系统: $os"; return 1 ;; esac
   tmp=$(mktemp -d)
-  for base in https://nodejs.org/dist/latest-v22.x https://npmmirror.com/mirrors/node/latest-v22.x; do
+  # CREW_NODE_MIRROR=<base url of a latest-v22.x dir> is tried first (e.g. a company mirror); curl/wget honour HTTPS_PROXY
+  for base in ${CREW_NODE_MIRROR:-} https://nodejs.org/dist/latest-v22.x https://npmmirror.com/mirrors/node/latest-v22.x; do
     say "下载便携 Node 22 ($os-$arch) from $base ..."
     if fetch "$base/SHASUMS256.txt" "$tmp/sums" 2>/dev/null; then
       f=$(grep -o "node-v[0-9.]*-$os-$arch\.tar\.gz" "$tmp/sums" | head -1)
