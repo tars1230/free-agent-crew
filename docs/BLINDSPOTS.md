@@ -31,3 +31,7 @@
 | 27 | 弱模型混进轮换、新模型没评测被误杀 | v1.1.0 能力门槛：AA Intelligence ≥30 且 Terminal-Bench 4.0 ≥10%（或 Agentic ≥15）才进轮换；评测自动从 OpenRouter 公开接口取，失败回落缓存/排名表；无评测新模型进试用期排在最后，本机成功率决定转正或降级；--model 不受限，MODEL_MIN_SCORE=0 临时放宽 |
 | 28 | cline 被 kill -9/断电强杀后全局停在 act 模式 | **部分处理**：引用计数会剔除死进程，下一次 crew 运行 cline 结束时自动还原；在那之前需手动切回（见 skill references/troubleshooting.md） |
 | 29 | 同一 skill 被多个目录重复加载 | opencode/kilo/cline 也会读 `~/.claude/skills`、`~/.agents/skills`；各目录内容相同且同名，重复只是冗余，不会冲突；`--no-skills` 可跳过 |
+| 30 | 额度只能事后猜、没有调用记录 | v1.3.0：每次调用写 start/switch/quota_exhausted/timeout/done 等事件到 `~/.free-agent-crew/logs/events.jsonl`（不含任务内容，可 `CREW_EVENTS_LOG` 改位置）；`crew quota` 汇总红黄绿灰；被 kill -9 的调用只有 start，计为“无结束记录”不算失败 |
+| 31 | kilo 限额按请求数、我们只能数调用 | **部分处理**：显示“本小时调用 x 次”并注明单次调用可能含多次请求，只作下限参考 |
+| 32 | 托盘跨平台 | macOS 本机编译+LaunchAgent（无 swiftc 跳过并提示）；Windows NotifyIcon+启动文件夹，重装/卸载时旧实例自行退出不强杀；Linux 不装常驻程序只给状态栏示例。Windows/Linux **未实机测试** |
+| 33 | 试用期转正只看 AGENT_EVENTS_LOG | 刻意未改：crew 自己的 events.jsonl 暂不参与转正判断，避免行为变化；需要时把 `AGENT_EVENTS_LOG` 指向它 |

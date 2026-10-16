@@ -3,7 +3,7 @@ name: free-agent-crew
 description: Dispatch three free-model coding CLIs (cline, kilo, opencode) as a crew for independent second opinions, parallel code/document review, brainstorming, draft→critique→finalize relays and do-then-cross-review, at zero model cost. Quota/429 fallback, cooldowns, timeouts and a capability gate are automatic. Use when you want an independent review, more ideas, or to offload a self-contained subtask without spending your own tokens.
 license: MIT
 metadata:
-  version: "1.2.0"
+  version: "1.3.0"
 ---
 <!-- free-agent-crew-skill v2 -->
 
@@ -26,7 +26,7 @@ crew doctor        # 不在 PATH 时：{{CREW_ABS}} doctor
 | 一人做、其余人审 | `crew cross "<任务>" --write --cwd <repo>` |
 | 问一个问题/小活 | `crew ask "<问题>"` |
 | 指定员工 | `crew run kilo "<任务>"` |
-| 谁有额度 | `crew status` |
+| 谁有额度 | `crew status`；一眼看红黄绿：`crew quota`（`--json` 机读） |
 
 - 默认**只读**；要改文件必须 `--write` 且限定 `--cwd`。
 - 长任务写进文件用 `--file task.md`，或 `-` 从 stdin 读。

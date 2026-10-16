@@ -5,6 +5,7 @@
 | 文件 | 用途 |
 |---|---|
 | [install-new-device.md](install-new-device.md) | 新设备一句话安装 |
+| [quota.md](quota.md) | 先看额度红黄绿再决定派给谁 |
 | [single-worker.md](single-worker.md) | 单员工派活（ask / run） |
 | [review.md](review.md) | 多员工并行互审 |
 | [brainstorm.md](brainstorm.md) | 脑暴 → 收敛 |

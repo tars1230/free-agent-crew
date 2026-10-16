@@ -1,6 +1,6 @@
 #!/bin/sh
 # free-agent-crew installer for macOS / Linux. Idempotent: safe to run again (upgrade/repair).
-# Usage: sh install.sh [--no-cli] [--no-path] [--no-skills] [--upgrade] [--registry URL] [--force]
+# Usage: sh install.sh [--no-cli] [--no-path] [--no-skills] [--upgrade] [--registry URL] [--force] [--tray] [--uninstall-tray]
 # Only bootstraps Node; every other step is the cross-platform Node implementation (crew setup).
 set -eu
 SRC=$(cd "$(dirname "$0")" && pwd)

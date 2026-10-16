@@ -1,5 +1,5 @@
 # free-agent-crew installer for Windows (PowerShell 5+). Idempotent. No bash needed.
-# Usage: powershell -ExecutionPolicy Bypass -File install.ps1 [--no-cli] [--no-path] [--no-skills] [--upgrade] [--registry URL]
+# Usage: powershell -ExecutionPolicy Bypass -File install.ps1 [--no-cli] [--no-path] [--no-skills] [--upgrade] [--registry URL] [--force] [--tray] [--uninstall-tray]
 $ErrorActionPreference = 'Stop'
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $Src = Split-Path -Parent $MyInvocation.MyCommand.Path

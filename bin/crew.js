@@ -19,7 +19,10 @@ const HELP = `crew — 派发免费模型员工（cline / kilo / opencode），�
   crew status [--json]                      各员工可用模型 / 冷却到何时
   crew models <员工> [--refresh]            免费模型名单、能力分与门槛（MODEL_MIN_SCORE，默认 60）
   crew reset <员工> [模型]                  清除冷却记录
-  crew setup [--no-cli] [--no-path] [--no-skills] [--upgrade] [--registry URL] [--force]
+  crew setup [--no-cli] [--no-path] [--no-skills] [--upgrade] [--registry URL] [--force] [--tray] [--uninstall-tray]
+  crew quota [员工...] [--json]   今日调用/成功率/首选模型/冷却/门槛（红黄绿；只读本机记录，不联网）
+  crew quota --line                一行状态，给 waybar/polybar/tmux 等状态栏用
+  crew tray [install|uninstall|status]   状态栏/托盘（macOS 菜单栏、Windows 通知区域；默认不装）
   crew version
 
 通用选项:
@@ -42,7 +45,7 @@ function parse(argv) {
     else if (a === '--timeout') o.timeout = +val();
     else if (/^--(workers|cwd|model|file|registry|n|timeout)=/.test(a)) { const [k, v] = a.slice(2).split(/=(.*)/s); o[k] = ['n', 'timeout'].includes(k) ? +v : v; }
     else if (a === '--no-synth') o.synth = false;
-    else if (['--json', '--write', '--live', '--quick', '--refresh', '--no-cli', '--no-path', '--no-skills', '--upgrade', '--force'].includes(a)) o[a.slice(2).replace(/-(\w)/g, (_, c) => c.toUpperCase())] = true;
+    else if (['--json', '--write', '--live', '--quick', '--refresh', '--no-cli', '--no-path', '--no-skills', '--upgrade', '--force', '--tray', '--uninstall-tray', '--line'].includes(a)) o[a.slice(2).replace(/-(\w)/g, (_, c) => c.toUpperCase())] = true;
     else o._.push(a);
   }
   return o;
@@ -67,6 +70,16 @@ async function main() {
   if (cmd === 'doctor') { const r = await require('../lib/doctor').doctor(o); console.log(r.text); return r.code; }
   if (cmd === 'setup') return require('../lib/setup').setup(o);
   const W = require('../lib/workers'); const M = require('../lib/models'); const E = require('../lib/engine');
+  if (cmd === 'quota') {
+    const Q = require('../lib/quota'); const d = await Q.quota(o._.length ? o._.map((n) => W.getWorker(n).name) : undefined);
+    console.log(o.json ? JSON.stringify(d, null, 1) : o.line ? Q.line(d) : Q.render(d)); return 0;
+  }
+  if (cmd === 'tray') {
+    const T = require('../lib/tray'); const sub = o._[0] || 'status';
+    if (sub === 'status') { const s = T.status(); console.log(s.installed ? '已安装: ' + s.files.join(' ') : '未安装（crew tray install）'); return 0; }
+    if (!['install', 'uninstall'].includes(sub)) { console.error('crew tray [install|uninstall|status]'); return 64; }
+    const r = sub === 'install' ? T.install() : T.uninstall(); r.msgs.forEach((m) => console.log(m)); return r.ok ? 0 : 1;
+  }
   if (cmd === 'status' || cmd === 'models') {
     const names = o._.length ? o._ : W.workerList(); const out = [];
     for (const n of names) {
