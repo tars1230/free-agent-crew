@@ -3,14 +3,24 @@
 把三个免费模型编程 CLI（**cline / kilo / opencode**）变成总控 agent（WorkBuddy、Claude Code、Codex、Hermes……）可直接派活的“员工团队”：
 自动发现免费模型 → 按能力排序 → 额度/429 自动换模型、换员工 → 记录冷却 → 汇总结果。单一 Node.js 实现，macOS / Linux / Windows 通用，零 npm 依赖。
 
+## 三个板块
+
+| 板块 | 目录 | 用途 | 入口 |
+|---|---|---|---|
+| 工具 / 安装包 | `bin/` `lib/` `install.sh` `install.ps1` `data/` `test/` | `crew` 命令本体：调度、额度切换、能力门槛、体检、跨平台安装 | 下载 `free-agent-crew-1.2.0.zip` → 运行安装脚本（见下） |
+| Skill | `skills/free-agent-crew/`（`SKILL.md` + `references/`） | 让 Claude Code、Codex、WorkBuddy/CodeBuddy、Hermes、opencode、cline、kilo 等 agent 知道何时、怎样派活给 `crew` | 安装脚本自动装到各 agent 的技能目录；只装 skill：解压 `free-agent-crew-skill-1.2.0.zip` 到技能目录 |
+| 提示词 | `prompts/` | 给总控 agent 直接复制的派单模板：新设备安装、单员工、互审、脑暴、接力、做-审分离 | 打开 [`prompts/README.md`](prompts/README.md) |
+
+其他：`docs/BLINDSPOTS.md` 盲区清单；`LICENSE`（MIT）。
+
 ## 一句话安装
 macOS / Linux：
 ```sh
-unzip -o free-agent-crew-1.1.0.zip -d ~/Downloads && sh ~/Downloads/free-agent-crew/install.sh
+unzip -o free-agent-crew-1.2.0.zip -d ~/Downloads && sh ~/Downloads/free-agent-crew/install.sh
 ```
 Windows（PowerShell）：
 ```powershell
-Expand-Archive -Force free-agent-crew-1.1.0.zip $HOME\Downloads; powershell -ExecutionPolicy Bypass -File $HOME\Downloads\free-agent-crew\install.ps1
+Expand-Archive -Force free-agent-crew-1.2.0.zip $HOME\Downloads; powershell -ExecutionPolicy Bypass -File $HOME\Downloads\free-agent-crew\install.ps1
 ```
 安装器是幂等的，重复运行=修复/升级。参数：`--no-cli`（不装三个 CLI）`--no-path` `--no-skills` `--upgrade`（升级 CLI）`--registry URL` `--force`（覆盖同名技能）。
 
@@ -24,7 +34,7 @@ Expand-Archive -Force free-agent-crew-1.1.0.zip $HOME\Downloads; powershell -Exe
 | 自动更新/遥测 | 没有配置时新建 `opencode.json`/`kilo.json`（autoupdate=false, share=disabled）；已有 JSONC 不改；运行时总是注入 `DO_NOT_TRACK=1`、`OPENCODE_DISABLE_AUTOUPDATE=1`、`KILO_DISABLE_AUTOUPDATE=1` 等 |
 | 命令 | `~/.free-agent-crew/bin/` 下生成 `crew`、`crew-cline/kilo/opencode`，以及 `cline-auto/kilo-auto/opencode-auto`（若 PATH 上已有别人的同名命令则不生成，不覆盖）。Windows 生成 `.cmd` + `.ps1` |
 | PATH | Linux/mac：在 `.zshrc/.bashrc/.bash_profile/.profile`（和 fish conf.d）写入带标记的块，可重复运行；Windows：写用户 PATH（PowerShell API，不用会截断的 setx） |
-| 技能 | `SKILL.md` 装到 `~/.free-agent-crew/skill/`，并装进已存在的 `~/.claude/skills`、`~/.codex/skills`、`~/.workbuddy/skills`、`~/.hermes/skills`、`~/.agents/skills`、`~/.config/opencode/skills`；SKILL 内写入了本机绝对路径调用方式 |
+| 技能 | 整个 `skills/free-agent-crew/`（`SKILL.md` + `references/`）装到 `~/.free-agent-crew/skill/free-agent-crew/`，并装进**已存在**的 `~/.claude/skills`、`~/.codex/skills`、`~/.workbuddy/skills`、`~/.codebuddy/skills`、`~/.hermes/skills`、`~/.agents/skills`、`~/.config/opencode/skills`、`~/.cline/skills`、`~/.kilo/skills`；文档里的 `{{CREW_ABS}}` 等占位换成本机绝对路径；同名但非 crew 的技能不覆盖（`--force` 才覆盖） |
 
 不依赖 PATH 的调用：`"<node 绝对路径>" ~/.free-agent-crew/app/bin/crew.js doctor`（doctor 第一行会打印本机的准确命令）。
 
@@ -64,7 +74,7 @@ cline-auto|kilo-auto|opencode-auto ...   # 与原 CLI 参数一致 + 自动换�
 
 ## 测试
 ```sh
-npm test                    # node:test，49 个用例：假 CLI 覆盖切换/75/124/77/127/stdin/act 模式/并发锁/Windows shim 与 PATH 逻辑/能力门槛（排除、试用期排序、评测拉取失败回落、--model 绕过）
+npm test                    # node:test，51 个用例：假 CLI 覆盖切换/75/124/77/127/stdin/act 模式/并发锁/Windows shim 与 PATH 逻辑/skill 结构与安装/能力门槛（排除、试用期排序、评测拉取失败回落、--model 绕过）
 sh test/docker-linux.sh     # 有 docker 时在一次性容器里跑测试和安装
 ```
 

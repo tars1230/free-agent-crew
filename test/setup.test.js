@@ -41,3 +41,37 @@ test('disableAutoUpdate: creates config when absent, never rewrites JSONC', { sk
   assert.strictEqual(JSON.parse(fs.readFileSync(path.join(sb.home, '.config', 'opencode', 'opencode.json'), 'utf8')).autoupdate, false);
   assert.strictEqual(fs.readFileSync(path.join(sb.home, '.config', 'kilo', 'kilo.jsonc'), 'utf8'), '// mine\n{}');
 });
+
+test('skill dir: Agent Skills frontmatter valid; setup installs SKILL.md + references (templated), upgrades an older crew skill', { skip: process.platform === 'win32' }, () => {
+  const src = path.join(__dirname, '..', 'skills', 'free-agent-crew');
+  const md = fs.readFileSync(path.join(src, 'SKILL.md'), 'utf8');
+  const fm = md.match(/^---\n([\s\S]*?)\n---\n/); assert.ok(fm, 'frontmatter');
+  const name = (fm[1].match(/^name:\s*(.+)$/m) || [])[1]; const desc = (fm[1].match(/^description:\s*(.+)$/m) || [])[1];
+  assert.strictEqual(name, path.basename(src)); assert.match(name, /^[a-z0-9]+(-[a-z0-9]+)*$/); assert.ok(name.length <= 64);
+  assert.ok(desc && desc.length > 20 && desc.length <= 1024, 'description length');
+  assert.ok(md.split('\n').length < 500, 'SKILL.md stays short');
+  for (const m of md.matchAll(/\]\((references\/[^)]+)\)/g)) assert.ok(fs.existsSync(path.join(src, m[1])), 'link ' + m[1]);
+  assert.strictEqual(require('../package.json').version, (md.match(/version:\s*"([^"]+)"/) || [])[1], 'skill metadata.version == package version');
+  const sb = sandbox({ SHELL: '/bin/zsh' });
+  for (const h of ['.cline', '.kilo', '.codebuddy']) fs.mkdirSync(path.join(sb.home, h), { recursive: true });
+  const old = path.join(sb.home, '.agents', 'skills', 'free-agent-crew'); fs.mkdirSync(old, { recursive: true });
+  fs.writeFileSync(path.join(old, 'SKILL.md'), '<!-- free-agent-crew-skill v1 -->\nold\n');
+  const r = crew(['setup', '--no-cli', '--no-path'], sb); assert.strictEqual(r.rc, 0, r.out + r.err);
+  for (const d of [path.join(sb.env.CREW_HOME, 'skill', 'free-agent-crew'), old, ...['.cline', '.kilo', '.codebuddy'].map((h) => path.join(sb.home, h, 'skills', 'free-agent-crew'))]) {
+    const s = fs.readFileSync(path.join(d, 'SKILL.md'), 'utf8'); assert.match(s, /free-agent-crew-skill v2/, d);
+    assert.ok(!s.includes('{{CREW_'), 'templated ' + d);
+    const t = fs.readFileSync(path.join(d, 'references', 'troubleshooting.md'), 'utf8');
+    assert.ok(t.includes(process.execPath) && !t.includes('{{CREW_'), 'references templated ' + d);
+    assert.ok(fs.existsSync(path.join(d, 'references', 'commands.md')));
+  }
+});
+
+test('installSkill targets use the agent name (".config/opencode" -> "opencode")', () => {
+  const sb = sandbox({}); const old = { ...process.env }; Object.assign(process.env, sb.env, { HOME: sb.home, USERPROFILE: sb.home });
+  try {
+    delete require.cache[require.resolve('../lib/setup')];
+    const out = require('../lib/setup').installSkill(process.execPath, '/x/crew.js', { targets: ['opencode', 'kilo'] });
+    for (const h of ['.config/opencode', '.kilo']) assert.ok(fs.existsSync(path.join(sb.home, h, 'skills', 'free-agent-crew', 'references', 'commands.md')), h + ' ' + out.join('\n'));
+    assert.ok(!fs.existsSync(path.join(sb.home, '.claude', 'skills', 'free-agent-crew')));
+  } finally { process.env = old; }
+});
