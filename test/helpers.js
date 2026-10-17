@@ -26,6 +26,13 @@ function crew(args, sb, { input, timeout = 60000, env = {} } = {}) {
   const r = cp.spawnSync(process.execPath, [CREW, ...args], { env: { ...sb.env, ...env }, input, encoding: 'utf8', timeout, stdio: [input === undefined ? 'ignore' : 'pipe', 'pipe', 'pipe'] });
   return { rc: r.status, out: r.stdout, err: r.stderr, error: r.error };
 }
+// v1.3.4: review is a judgement call (production-grade models only), so give the stub models measured rank entries.
+function prodTables(sb) {
+  const cfg = path.join(sb.env.CREW_HOME, 'config'); fs.mkdirSync(cfg, { recursive: true });
+  const e = { score: 80, aa: 40, tb: 20, evidence: 'measured' };
+  for (const n of ['cline', 'kilo', 'opencode']) fs.writeFileSync(path.join(cfg, `${n}-model-rank.json`), JSON.stringify({ models: { [`${n}/a`]: e, [`${n}/b`]: e, [`${n}/c`]: e } }));
+  return sb;
+}
 function calls(sb) { try { return fs.readFileSync(sb.env.FAKE_LOG, 'utf8').trim().split('\n').filter(Boolean).map(JSON.parse); } catch (_) { return []; } }
 function state(sb, w) { try { return JSON.parse(fs.readFileSync(path.join(sb.env.CREW_HOME, 'state', `${w}-quota-state.json`), 'utf8')); } catch (_) { return null; } }
-module.exports = { ROOT, STUBS, CREW, sandbox, crew, calls, state };
+module.exports = { ROOT, STUBS, CREW, sandbox, crew, calls, state, prodTables };

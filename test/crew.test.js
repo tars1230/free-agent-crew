@@ -2,10 +2,10 @@
 const test = require('node:test');
 const assert = require('node:assert');
 const fs = require('fs'); const path = require('path');
-const { sandbox, crew, calls } = require('./helpers');
+const { sandbox, crew, calls, prodTables } = require('./helpers');
 
 test('review: parallel on all workers, read-only guard, synthesis, exit 0', () => {
-  const sb = sandbox();
+  const sb = prodTables(sandbox());
   const r = crew(['review', '检查 foo.js'], sb, { timeout: 120000 });
   assert.strictEqual(r.rc, 0, r.err);
   assert.match(r.out, /crew review: 3\/3/); assert.match(r.out, /## 汇总（由 /);
@@ -15,7 +15,7 @@ test('review: parallel on all workers, read-only guard, synthesis, exit 0', () =
   assert.ok(fs.existsSync(path.join(dir, 'summary.json')) && fs.existsSync(path.join(dir, 'synthesis.md')));
 });
 test('review: an exhausted worker is skipped, others still deliver', () => {
-  const sb = sandbox({ FAKE_BEHAVIOR: 'cline/a=limit,cline/b=limit,cline/c=limit' });
+  const sb = prodTables(sandbox({ FAKE_BEHAVIOR: 'cline/a=limit,cline/b=limit,cline/c=limit' }));
   const r = crew(['review', 'x', '--no-synth', '--json'], sb, { timeout: 120000 });
   const j = JSON.parse(r.out); assert.strictEqual(j.code, 0);
   assert.strictEqual(j.results.find((x) => x.worker === 'cline').rc, 75);
@@ -58,3 +58,9 @@ test('status/models/reset/doctor --quick work offline with fakes', () => {
   const d = crew(['doctor', '--quick'], sb, { timeout: 120000 }); assert.match(d.out, /需要你做的事/); assert.match(d.out, /绝对路径调用/);
 });
 test('usage errors -> 64', () => { const sb = sandbox(); assert.strictEqual(crew(['run', 'nobody', 'x'], sb).rc, 64); assert.strictEqual(crew(['ask'], sb).rc, 64); });
+test('review without production-grade models: reviewers fail with 78 instead of using weak models', () => {
+  const sb = sandbox(); // stub models a/b/c are not in any rank table (unrated)
+  const r = crew(['review', 'x', '--no-synth', '--json'], sb, { timeout: 120000 });
+  const j = JSON.parse(r.out); assert.ok(j.results.every((x) => x.rc === 78), r.out); assert.strictEqual(calls(sb).length, 0);
+  const a = crew(['ask', 'hi', '--json'], sb); assert.strictEqual(JSON.parse(a.out).code, 0); // non-judgement call unchanged
+});

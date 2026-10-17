@@ -1,5 +1,9 @@
 # 更新记录
 
+## v1.3.4（2026-10-18）
+- **判断类调用只用生产级**（对齐现网 opencode-auto / cline-auto / kilo-auto 的 judgement-gate 与 check_ledger 第 9 项）：判断类 = `crew review` / `crew cross` 审查员和 review 汇总，或 `AUTO_JUDGEMENT=1`（`CREW_JUDGEMENT=1`），或 `AGENT_CALLER` / `AGENT_TASK` / `AGENT_ROLE` 含 review、verdict、judge、accept、audit、verify、supervision、second-vote、复核、判断、验收、裁决。只在生产级模型间选择和切换（新 `gate.judgeGrade`：全部排名表合并、固定 baseline、status=pass 且 evidence 为 measured/openrouter_aa；`--model` 弱模型和离线内置回落同样过滤）。没有生产级 → 退出码 **78**（日志 `judgement_no_prod`，事件 `judgement_no_prod`）；生产级用尽 → 75 并注明不退到弱模型。非判断类调用不变。
+- 测试 76 → 83：新增 `test/judgement.test.js`；review 用例给桩模型补实测排名条目；“proxy 不计票”改为直接测 `voteOf`（review 中弱 `--model` 现在会被判断门换成生产级）。
+
 ## v1.3.3（2026-10-18）
 与 2026-10-18 现行规则（SSOT 管理者规则 1–7 条、quota-map、`*-model-rank.json`、model_gate、model-discover v4、opencode-auto v1.4 / cline-auto v3.6）对齐。
 - **地区屏蔽**（新 `lib/region.js`，对齐 model_gate.region_* 和包装器）：地区/国家限制报错不重试、立刻换下一个模型（日志 `region_blocked`，事件 `switch reason=region_blocked`），记入 `config/region-blocked-models.json` 7 天；到期复查一次（带防并发 claim），成功即移除（`region_recovered`）；`--model` 指定的不跳过；`crew quota` 列出被屏蔽模型。判定比参考实现更严：命中行还必须像报错，且 crew 自己的标识/文件名（region-blocked-models.json、region_blocked=…）不算——参考实现的 REGION_RE 会把 `ls` 输出里的文件名当成地区报错。

@@ -1,4 +1,4 @@
-# 复核票与派活规则（v1.3.3，对齐 2026-10-18 现行规则）
+# 复核票与派活规则（v1.3.4，对齐 2026-10-18 现行规则）
 
 本页是 crew 使用方（总控 agent）的派活和复核约定。**这里不写任何模型分数**：分数和“是否生产级”一律以排名表为准——
 `data/*-model-rank.json`（cline / kilo / opencode 免费池，外加 `data/subscription-model-rank.json` 收录的 cursor-agent / agy 订阅模型），
@@ -44,3 +44,6 @@ crew review "只读复核 /tmp/review-<id>.diff：…" --cwd <仓库>
 - `crew review`、`crew cross` 的审查员默认顺序是 opencode → cline → kilo（`--workers` 或 `CREW_ORDER` 可改）；`ask` / `relay` 等其它模式仍是 kilo → opencode → cline（省额度）。
 - 每个审查结果带 `vote` / `vote_note`（`--json` 和 `summary.json` 里都有）：kilo 恒为不计票；其余只有生产级模型、且跑成功时才计票。输出末尾一行列出计票的工具(模型)，以及“至少一票生产级：是/否”。
 - 合并（synthesis）时，不计票的意见只作参考，不能单独决定裁决。
+
+## 判断类调用只用生产级（v1.3.4）
+复核、验收、审计、supervision 等判断类调用只交给生产级模型；弱模型（provisional、proxy、vendor、无评测等）只干活不判断。crew 的 `review` / `cross` 审查与 review 汇总自动按判断类处理；其它调用设 `AUTO_JUDGEMENT=1`，或让 `AGENT_CALLER` / `AGENT_TASK` / `AGENT_ROLE` 带上 review、verify、复核、验收等词。没有可用生产级模型时退出 78，不退到弱模型。
