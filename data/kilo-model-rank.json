@@ -1,5 +1,5 @@
 {
- "_note": "kilo-auto 免费模型能力分（2026-10-16 重建）。score = 2×AA Intelligence Index；evidence: measured=AA 实测, proxy=同模型其它档/基座代理, vendor=仅厂商自报（试用期）, none=无评测（试用期）。门槛与新模型规则见 lib/gate.js 与 README。",
+ "_note": "kilo-auto 免费模型能力分（2026-10-16 重建）。score = 2×AA Intelligence Index；evidence: measured=AA 实测, proxy=同模型其它档/基座代理, vendor=仅厂商自报（试用期）, none=无评测（试用期）。门槛与新模型规则见 baseline 与 ~/.shared/lib/model_gate.py。",
  "baseline": {
   "scale": "score = 2 × AA Intelligence Index v4.3.x（满分 100 ≈ AA 50）",
   "min_score": 60,
@@ -7,7 +7,7 @@
   "agentic_floor": "Terminal-Bench 4.0（AA 测）≥ 10%；无 TB 数据时 AA Agentic Index ≥ 15",
   "provisional": "无评测模型：估分 ≥ 50 可进轮换但排在所有达标模型之后；本机 ≥5 次且成功率 ≥80% 转正，<50% 降 15 分",
   "env": "MODEL_MIN_SCORE / MODEL_MIN_TB / MODEL_MIN_AGENTIC / MODEL_PROVISIONAL / MODEL_PROVISIONAL_SLACK；MODEL_MIN_SCORE=0 临时关门槛；-m 不受限",
-  "updated": "2026-10-16"
+  "updated": "2026-10-17"
  },
  "models": {
   "kilo/stepfun/step-5-preview-free": {
@@ -96,6 +96,28 @@
    "evidence": "measured",
    "source": "AA 10.3（OpenRouter /api/v1/models benchmarks.artificial_analysis（AA Intelligence Index v4.3.2），2026-10-16 拉取）",
    "date": "2026-10-16"
+  },
+  "kilo/reflection/beam-free": {
+   "score": 60.0,
+   "aa": 30,
+   "tb": 3,
+   "evidence": "measured",
+   "source": "AA 30（artificialanalysis.ai/articles/reflection-beam，Intelligence Index v4.3.2）；AA 测 Terminal-Bench 4.0 3.0% < 10% → agent 编码地板不过，门槛排除；501B/23B，原 stealth/cat-jam",
+   "date": "2026-10-17"
+  },
+  "kilo/nvidia/nemotron-3.5-super-vl:free": {
+   "score": 53.0,
+   "aa": 26.5,
+   "tb": 0,
+   "evidence": "measured",
+   "source": "AA 26.5（OpenRouter benchmarks.artificial_analysis v4.3.2）；AA 测 Terminal-Bench 4.0 0.0% → 门槛排除（同 cline 表）",
+   "date": "2026-10-17"
+  },
+  "kilo/xingchen-agi/xing4.0-29b-a4b:free": {
+   "score": 50,
+   "evidence": "vendor",
+   "source": "无 AA/OpenRouter 评测。中国电信星辰自报 SWE-bench Verified 75.0、Terminal-Bench 2.1 57.5（huggingface.co/XingChen-AGI/Xing4.0-29B-A4B），与 Qwen3.6-35B-A3B 同档；29B/4B 小模型 → 试用期 50，本机反馈决定去留",
+   "date": "2026-10-17"
   }
  }
 }

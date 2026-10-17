@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- Template: replace every __HOME__ with your home directory (see README.md), save as
+     ~/Library/LaunchAgents/com.free-agent-crew.model-discover.plist -->
+<plist version="1.0"><dict>
+ <key>Label</key><string>com.free-agent-crew.model-discover</string>
+ <key>ProgramArguments</key><array>
+  <string>/usr/bin/nice</string><string>-n</string><string>10</string>
+  <string>/usr/bin/perl</string><string>-e</string><string>alarm 180; exec @ARGV</string>
+  <string>/usr/bin/python3</string><string>__HOME__/.free-agent-crew/extras/model-discover/model-discover.py</string></array>
+ <key>EnvironmentVariables</key><dict>
+  <key>PATH</key><string>__HOME__/.free-agent-crew/npm-global/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
+  <key>OPENCODE_REAL</key><string>opencode</string>
+  <key>MODEL_RANK_DIR</key><string>__HOME__/.free-agent-crew/app/data</string>
+  <key>MODEL_DISCOVER_STATE</key><string>__HOME__/.free-agent-crew/state/model-discover-seen.json</string>
+  <key>MODEL_EVAL_QUEUE</key><string>__HOME__/.free-agent-crew/state/model-eval-queue.jsonl</string>
+  <key>MODEL_DISCOVER_ALERT</key><string>__HOME__/.free-agent-crew/logs/model-discover.alert</string>
+  <key>MODEL_DISCOVER_LOG</key><string>__HOME__/.free-agent-crew/logs/model-discover.log</string>
+ </dict>
+ <key>StartCalendarInterval</key><array>
+  <dict><key>Hour</key><integer>9</integer><key>Minute</key><integer>10</integer></dict>
+  <dict><key>Hour</key><integer>18</integer><key>Minute</key><integer>10</integer></dict></array>
+ <key>StandardOutPath</key><string>/tmp/free-agent-crew-model-discover.out.log</string>
+ <key>StandardErrorPath</key><string>/tmp/free-agent-crew-model-discover.err.log</string>
+</dict></plist>

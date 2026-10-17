@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 // Fake cline/kilo/opencode for tests. Behaviour per model via FAKE_BEHAVIOR="model=kind,..." (default ok).
-// kinds: ok | limit | limit_hang | quote_limit | net | net_once | auth | hang | silent | slow
+// kinds: ok | limit | limit_hang | quote_limit | net | net_once | auth | fail | hang | silent | slow
 const fs = require('fs');
 const name = process.env.FAKE_NAME || require('path').basename(process.argv[1]).replace(/\.js$/, '');
 const argv = process.argv.slice(2);
@@ -28,6 +28,7 @@ const finish = () => {
       console.log('recovered after network retry'); process.exit(0);
     }
     case 'auth': console.error('Error: 401 Unauthorized - please log in'); process.exit(1);
+    case 'fail': console.error('Error: provider returned an invalid response'); process.exit(2);
     case 'hang': setInterval(() => process.stdout.write('.'), 500); break;
     case 'silent': setInterval(() => {}, 1000); break;
     case 'slow': setTimeout(() => { console.log('slow done'); process.exit(0); }, 2500); break;

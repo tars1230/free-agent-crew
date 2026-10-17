@@ -1,5 +1,5 @@
 {
- "_note": "opencode-auto 免费模型能力分（2026-10-16 重建）。score = 2×AA Intelligence Index；evidence: measured=AA 实测, proxy=同模型其它档/基座代理, vendor=仅厂商自报（试用期）, none=无评测（试用期）。门槛与新模型规则见 lib/gate.js 与 README。",
+ "_note": "opencode-auto 免费模型能力分（2026-10-16 重建）。score = 2×AA Intelligence Index；evidence: measured=AA 实测, proxy=同模型其它档/基座代理, vendor=仅厂商自报（试用期）, none=无评测（试用期）。门槛与新模型规则见 baseline 与 ~/.shared/lib/model_gate.py。",
  "baseline": {
   "scale": "score = 2 × AA Intelligence Index v4.3.x（满分 100 ≈ AA 50）",
   "min_score": 60,
@@ -7,7 +7,21 @@
   "agentic_floor": "Terminal-Bench 4.0（AA 测）≥ 10%；无 TB 数据时 AA Agentic Index ≥ 15",
   "provisional": "无评测模型：估分 ≥ 50 可进轮换但排在所有达标模型之后；本机 ≥5 次且成功率 ≥80% 转正，<50% 降 15 分",
   "env": "MODEL_MIN_SCORE / MODEL_MIN_TB / MODEL_MIN_AGENTIC / MODEL_PROVISIONAL / MODEL_PROVISIONAL_SLACK；MODEL_MIN_SCORE=0 临时关门槛；-m 不受限",
-  "updated": "2026-10-16"
+  "updated": "2026-10-17"
+ },
+ "preferred": {
+  "order": [
+   "opencode/deepseek-v4.1-flash-free",
+   "opencode/glm-5.3-flash-free"
+  ],
+  "fallback_on_error": [
+   "opencode/deepseek-v4.1-flash-free"
+  ],
+  "variant": {
+   "opencode/deepseek-v4.1-flash-free": "max"
+  },
+  "note": "2026-10-18 用户指定：opencode 首选 deepseek-v4.1-flash-free，glm-5.3-flash-free 备选（暂定，以后自动优化）。只调顺序不改分；置顶模型必须先过 model_gate，没过/不在免费池就自动不置顶。fallback_on_error 里的模型报任何错（不只限额）都换下一个。variant=max：AA 39.5/TB 26.8 是 Max 档实测；本机同题 high 7.4s vs max 8.5s 都答对。免费档输出上限 32K，若出现截断改回 high。回滚：删掉本字段即可。",
+  "date": "2026-10-18"
  },
  "models": {
   "opencode/step-5-preview-free": {
@@ -92,6 +106,44 @@
    "evidence": "measured",
    "source": "AA 12.9、Agentic 3.5（OpenRouter /api/v1/models benchmarks.artificial_analysis（AA Intelligence Index v4.3.2），2026-10-16 拉取）；31.6B/3.6B",
    "date": "2026-10-16"
+  },
+  "opencode/beam-free": {
+   "score": 60.0,
+   "aa": 30,
+   "tb": 3,
+   "evidence": "measured",
+   "source": "AA 30（artificialanalysis.ai/articles/reflection-beam，Intelligence Index v4.3.2）；AA 测 Terminal-Bench 4.0 3.0% < 10% → agent 编码地板不过，门槛排除；501B/23B，原 stealth/cat-jam",
+   "date": "2026-10-17"
+  },
+  "opencode/nemotron-3.5-super-vl-free": {
+   "score": 53.0,
+   "aa": 26.5,
+   "tb": 0,
+   "evidence": "measured",
+   "source": "AA 26.5（OpenRouter benchmarks.artificial_analysis v4.3.2）；AA 测 Terminal-Bench 4.0 0.0% → 门槛排除（同 cline 表）",
+   "date": "2026-10-17"
+  },
+  "opencode/glm-5.3-flash-free": {
+   "score": 83.6,
+   "aa": 41.8,
+   "agentic": 50.9,
+   "evidence": "measured",
+   "source": "AA 41.8、Coding 71.5、Agentic 50.9（OpenRouter /api/v1/models benchmarks.artificial_analysis v4.3.2，z-ai/glm-5.3-flash，2026-10-17 读缓存）",
+   "date": "2026-10-17"
+  },
+  "opencode/deepseek-v4.1-flash-free": {
+   "score": 79.0,
+   "aa": 39.5,
+   "tb": 26.8,
+   "evidence": "measured",
+   "source": "AA DeepSeek V4.1 Flash (Max) 39.5、AA 测 Terminal-Bench 4.0 26.8%（9 月版 checkpoint；artificialanalysis.ai，2026-10-18 核对）。注意：OpenRouter 现把这组 AA 数挂在 deepseek/deepseek-v4.1-flash-1017，原 id deepseek/deepseek-v4.1-flash 显示的是 Non-reasoning 档 24.7，别按原 id 取数。DeepSeek 10-17 发 1017 小更新；OpenCode 免费档背后是否 1017 未核实。AA 分为 Max 档，opencode-auto v1.4 起按 preferred.variant 传 --variant max。本机 2026-10-18 实测 2/2 成功（含 read 工具调用），cost 0，无地区报错",
+   "date": "2026-10-18",
+   "vendor_1017": {
+    "tb4": 42.3,
+    "deepswe": 77.0,
+    "source": "huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017（厂商自报，未独立复现，不计分）"
+   },
+   "watch": "AA 复测 1017 后更新 aa/tb/score；若超过 glm-5.3-flash-free 则自然升第 1"
   }
  }
 }

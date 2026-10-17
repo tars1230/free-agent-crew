@@ -1,5 +1,5 @@
 {
- "_note": "cline-auto 免费模型能力分（2026-10-16 重建）。score = 2×AA Intelligence Index；evidence: measured=AA 实测, proxy=同模型其它档/基座代理, vendor=仅厂商自报（试用期）, none=无评测（试用期）。门槛与新模型规则见 lib/gate.js 与 README。",
+ "_note": "cline-auto 免费模型能力分（2026-10-16 重建）。score = 2×AA Intelligence Index；evidence: measured=AA 实测, proxy=同模型其它档/基座代理, vendor=仅厂商自报（试用期）, none=无评测（试用期）。门槛与新模型规则见 baseline 与 ~/.shared/lib/model_gate.py。",
  "baseline": {
   "scale": "score = 2 × AA Intelligence Index v4.3.x（满分 100 ≈ AA 50）",
   "min_score": 60,

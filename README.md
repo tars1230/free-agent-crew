@@ -4,7 +4,7 @@
 自动发现免费模型 → 按能力排序 → 额度/429 自动换模型、换员工 → 记录冷却 → 汇总结果。单一 Node.js 实现，macOS / Linux / Windows 通用，零 npm 依赖。
 
 ## 三步上手
-1. **拿到 zip 并安装**：`free-agent-crew-1.3.1.zip` 可以来自 GitHub Release（私有仓库，要先 `gh auth login`，再运行 `gh release download -R tars1230/free-agent-crew -p 'free-agent-crew-[0-9]*.zip'` 下载最新版）、网盘，或别人直接发给你。解压到 Downloads 后运行（命令见下方「一句话安装」）：macOS / Linux 用 `sh ~/Downloads/free-agent-crew/install.sh`，Windows 用 `powershell -ExecutionPolicy Bypass -File $HOME\Downloads\free-agent-crew\install.ps1`。要状态栏或托盘就加 `--tray`。国内网络先看 [docs/REQUIREMENTS.md](docs/REQUIREMENTS.md) 设置代理或镜像。
+1. **拿到 zip 并安装**：`free-agent-crew-1.3.2.zip` 可以来自 GitHub Release（私有仓库，要先 `gh auth login`，再运行 `gh release download -R tars1230/free-agent-crew -p 'free-agent-crew-[0-9]*.zip'` 下载最新版）、网盘，或别人直接发给你。解压到 Downloads 后运行（命令见下方「一句话安装」）：macOS / Linux 用 `sh ~/Downloads/free-agent-crew/install.sh`，Windows 用 `powershell -ExecutionPolicy Bypass -File $HOME\Downloads\free-agent-crew\install.ps1`。要状态栏或托盘就加 `--tray`。国内网络先看 [docs/REQUIREMENTS.md](docs/REQUIREMENTS.md) 设置代理或镜像。
 2. **登录 cline（只要一次）**：新开一个终端，运行 `cline auth`，在浏览器登录 Cline 账号（免费注册）。kilo 和 opencode 不用登录。然后运行 `crew doctor`，“需要你做的事”为空就好了。
 3. **让总控 agent 派活**：安装器已经把 skill 装进本机已有的 Claude Code / Codex / WorkBuddy 等技能目录，直接对总控 agent 说“用 free-agent-crew 让免费员工复核 src/x.ts”即可；可复制的派单模板在 [prompts/](prompts/README.md)。想看谁还有额度：运行 `crew quota`。
 
@@ -14,20 +14,20 @@
 
 | 板块 | 目录 | 用途 | 入口 |
 |---|---|---|---|
-| 工具 / 安装包 | `bin/` `lib/` `install.sh` `install.ps1` `data/` `test/` | `crew` 命令本体：调度、额度切换、能力门槛、体检、跨平台安装 | 下载 `free-agent-crew-1.3.1.zip` → 运行安装脚本（见下） |
-| Skill | `skills/free-agent-crew/`（`SKILL.md` + `references/`） | 让 Claude Code、Codex、WorkBuddy/CodeBuddy、Hermes、opencode、cline、kilo 等 agent 知道何时、怎样派活给 `crew` | 安装脚本自动装到各 agent 的技能目录；只装 skill：解压 `free-agent-crew-skill-1.3.1.zip` 到技能目录 |
+| 工具 / 安装包 | `bin/` `lib/` `install.sh` `install.ps1` `data/` `test/` | `crew` 命令本体：调度、额度切换、能力门槛、体检、跨平台安装 | 下载 `free-agent-crew-1.3.2.zip` → 运行安装脚本（见下） |
+| Skill | `skills/free-agent-crew/`（`SKILL.md` + `references/`） | 让 Claude Code、Codex、WorkBuddy/CodeBuddy、Hermes、opencode、cline、kilo 等 agent 知道何时、怎样派活给 `crew` | 安装脚本自动装到各 agent 的技能目录；只装 skill：解压 `free-agent-crew-skill-1.3.2.zip` 到技能目录 |
 | 提示词 | `prompts/` | 给总控 agent 直接复制的派单模板：新设备安装、单员工、互审、脑暴、接力、做-审分离 | 打开 [`prompts/README.md`](prompts/README.md) |
 
-其他：`docs/REQUIREMENTS.md` 下载来源、注册登录、网络要求与离线安装；`docs/TRAY.md` 托盘；`docs/BLINDSPOTS.md` 盲区清单；`LICENSE`（MIT）。
+其他：`docs/REQUIREMENTS.md` 下载来源、注册登录、网络要求与离线安装；`docs/TRAY.md` 托盘；`docs/BLINDSPOTS.md` 盲区清单；`extras/` 可选组件（不随安装脚本安装）；`CHANGELOG.md` 版本记录；`LICENSE`（MIT）。
 
 ## 一句话安装
 macOS / Linux：
 ```sh
-unzip -o free-agent-crew-1.3.1.zip -d ~/Downloads && sh ~/Downloads/free-agent-crew/install.sh
+unzip -o free-agent-crew-1.3.2.zip -d ~/Downloads && sh ~/Downloads/free-agent-crew/install.sh
 ```
 Windows（PowerShell）：
 ```powershell
-Expand-Archive -Force free-agent-crew-1.3.1.zip $HOME\Downloads; powershell -ExecutionPolicy Bypass -File $HOME\Downloads\free-agent-crew\install.ps1
+Expand-Archive -Force free-agent-crew-1.3.2.zip $HOME\Downloads; powershell -ExecutionPolicy Bypass -File $HOME\Downloads\free-agent-crew\install.ps1
 ```
 安装器是幂等的，重复运行=修复/升级。参数：`--no-cli`（不装三个 CLI）`--no-path` `--no-skills` `--upgrade`（升级 CLI）`--registry URL`（也可设环境变量 `CREW_NPM_REGISTRY`）`--force`（覆盖同名技能）`--tray` / `--uninstall-tray`。Node 下载镜像用 `CREW_NODE_MIRROR`，代理用 `HTTPS_PROXY`，详见 [docs/REQUIREMENTS.md](docs/REQUIREMENTS.md)。
 
@@ -68,9 +68,26 @@ cline-auto|kilo-auto|opencode-auto ...   # 与原 CLI 参数一致 + 自动换�
 1. 实时名单（3 秒超时）：cline `api.cline.bot/.../recommended-models` 的 `free`；kilo `api.kilo.ai/api/gateway/models` 的 `isFree`（排除音乐/TTS/审核/嵌入等非文本模型）；opencode `opencode.ai/zen/v1/models` 的 `*-free` 与 `big-pickle`，并与本机 `opencode models opencode` 取交集。
 2. 1 小时缓存 → 过期缓存 → 内置名单（离线也能跑）。
 3. 能力分与门槛（v1.1.0）：`score = 2 × Artificial Analysis Intelligence Index v4.3.x`。默认门槛 `MODEL_MIN_SCORE=60`（即 AA ≥ 30），并要求 agentic 下限：AA 测的 Terminal-Bench 4.0 ≥ 10%（`MODEL_MIN_TB`），没有 TB 数据时 AA Agentic Index ≥ 15（`MODEL_MIN_AGENTIC`）。低于门槛的模型不进轮换；`--model` 显式指定的不受限；`MODEL_MIN_SCORE=0` 临时放宽。
-   - 依据优先级：`data/*-model-rank.json`（2026-10-16 重建，每条都写了来源和日期，用户可在 `~/.free-agent-crew/config/` 覆盖）→ OpenRouter 公开 `/api/v1/models` 里的 AA 指数（无需 key，24 小时缓存，拉取失败用过期缓存，再不行只用排名表）→ 试用期估分。
+   - 依据优先级：`data/*-model-rank.json`（2026-10-16 重建，v1.3.2 起与现网表对齐，每条都写了来源和日期，用户可在 `~/.free-agent-crew/config/` 覆盖）→ OpenRouter 公开 `/api/v1/models` 里的 AA 指数（无需 key，24 小时缓存，拉取失败用过期缓存，再不行只用排名表）→ 试用期估分。
    - 新模型（没有评测）= 试用期：按同家族上一代实测分加不超过 10 分的溢价、付费版旗舰价（≥$2/M 输出 +5）、名字档位估分，最高 79；估分 ≥ 门槛−10（`MODEL_PROVISIONAL_SLACK`）才能进轮换，且永远排在所有达标模型之后；`MODEL_PROVISIONAL=0` 可关掉试用期。设了 `AGENT_EVENTS_LOG` 时，按近 14 天本机成功率：≥5 次且 ≥80% 转正，<50% 降 15 分。
    - `crew models` 显示每个模型的分数，标注“试用期”和“门槛排除”及原因。
+
+### 首选模型 `preferred`（v1.3.2）
+排名表顶层可以有一个 `preferred` 块，只调顺序、不改分（内置的 opencode 表已带一份：首选 deepseek-v4.1-flash-free，备选 glm-5.3-flash-free）：
+```json
+"preferred": {
+  "order": ["opencode/deepseek-v4.1-flash-free", "opencode/glm-5.3-flash-free"],
+  "fallback_on_error": ["opencode/deepseek-v4.1-flash-free"],
+  "variant": { "opencode/deepseek-v4.1-flash-free": "max" }
+}
+```
+- `order`：先过门槛，再把 `order` 里**已达标**的模型按顺序放到最前；被门槛排除、或不在今天免费名单里的不置顶。用 `--model` 指定、或用 `CREW_<员工>_FREE_MODELS` 手写名单时不生效。日志记 `preferred_pin=...`。
+- `fallback_on_error`：这些模型报**任何错**（不只是额度；登录错误、超时除外）都换下一个模型，日志记 `pinned_error`，事件 `switch reason=pinned_error`。`--model` 显式指定的模型不受影响。
+- `variant`：只对 opencode 生效，给该模型加 `--variant <值>`（值只允许字母、数字和 `_ . -`）；你自己在 `opencode-auto` 参数里写了 `--variant` 时不再追加。
+- 覆盖与回滚：在 `~/.free-agent-crew/config/opencode-model-rank.json` 里写自己的 `preferred` 会**整块替换**内置的那份；写 `"preferred": {}` 即关闭。
+
+### 可选组件：`extras/model-discover`
+每天比对三家的免费名单和 OpenRouter 的上游新快照，把新模型/未排名模型写进待评测队列并留告警，从不改排名表。不在安装脚本默认流程里，需要时按 [extras/model-discover/README.md](extras/model-discover/README.md) 手动装（macOS launchd 模板、Linux cron 示例；Windows 暂不提供）。
 
 ## 额度与冷却
 - 识别：各 CLI 自己的额度错误、HTTP 429、Too Many Requests、FreeUsageLimitError 等。cline 额度错误打在 stdout 且退出码 0，所以 rc=0 时只认 cline 自己的错误行；kilo/opencode stdout 里只认“错误样式”的行，模型正文里引用这些字眼不会误判。
@@ -88,7 +105,7 @@ cline-auto|kilo-auto|opencode-auto ...   # 与原 CLI 参数一致 + 自动换�
 
 ## 测试
 ```sh
-npm test                    # node:test，60 个用例：自定义 npm 目录查找/额度面板各颜色与计数/事件记录/macOS 托盘真实编译并沙箱运行/假 CLI 覆盖切换/75/124/77/127/stdin/act 模式/并发锁/Windows shim 与 PATH 逻辑/skill 结构与安装/能力门槛（排除、试用期排序、评测拉取失败回落、--model 绕过）
+npm test                    # node:test，66 个用例：首选模型置顶/fallback_on_error/opencode --variant、自定义 npm 目录查找/额度面板各颜色与计数/事件记录/macOS 托盘真实编译并沙箱运行/假 CLI 覆盖切换/75/124/77/127/stdin/act 模式/并发锁/Windows shim 与 PATH 逻辑/skill 结构与安装/能力门槛（排除、试用期排序、评测拉取失败回落、--model 绕过）
 sh test/docker-linux.sh     # 有 docker 时在一次性容器里跑测试和安装
 ```
 
