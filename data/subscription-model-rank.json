@@ -1,0 +1,93 @@
+{
+ "_note": "订阅/付费模型能力分（2026-10-18 建）。只收 Artificial Analysis 实测（经 OpenRouter 模型页/接口 benchmarks.artificial_analysis 读取，Intelligence Index v4.3.x），score = 2×AA，口径同三张免费池表；tb=AA 测 Terminal-Bench 4.0。查不到 AA 实测的不收（如 gemini-3.8-pro、claude-fable 等未收）。供 check_ledger 第 9 项分级用，不参与 cline/kilo/opencode 的免费池轮换。",
+ "baseline": {
+  "min_score": 60,
+  "agentic_floor": "Terminal-Bench 4.0 ≥ 10%；无 TB 时 AA Agentic ≥ 15（同 ~/.shared/lib/model_gate.py）",
+  "updated": "2026-10-18"
+ },
+ "models": {
+  "claude-opus-5-thinking-high": {
+   "score": 96.2,
+   "aa": 48.1,
+   "tb": 46.0,
+   "agentic": 52.3,
+   "evidence": "openrouter_aa",
+   "tier": "AA High",
+   "source": "https://openrouter.ai/anthropic/claude-opus-5 （AA: Claude Opus 5 (High) Intelligence 48.1 / Terminal-Bench 4.0 46.0% / Agentic 52.3）",
+   "date": "2026-10-18",
+   "note": "cursor-agent 用；thinking-high 对应 AA High 档"
+  },
+  "claude-sonnet-5-thinking-high": {
+   "score": 63.4,
+   "aa": 31.7,
+   "tb": 5.1,
+   "evidence": "openrouter_aa",
+   "tier": "AA High",
+   "source": "https://openrouter.ai/anthropic/claude-sonnet-5 （AA: Claude Sonnet 5 (High) Intelligence 31.7 / Terminal-Bench 4.0 5.1%）",
+   "date": "2026-10-18",
+   "note": "cursor-agent 用；AA 测 TB4.0 5.1% < 10%，按门槛不是生产级（Max 档 TB 14.1%，但本机用 high）"
+  },
+  "claude-opus-4-6-thinking": {
+   "score": 63.8,
+   "aa": 31.9,
+   "evidence": "openrouter_aa",
+   "tier": "AA Max",
+   "source": "https://openrouter.ai/anthropic/claude-opus-4.6 （AA: Claude Opus 4.6 (Max) Intelligence 31.9；AA 只测了 Terminal-Bench Hard 46.2%，没有 TB4.0 和 Agentic）",
+   "date": "2026-10-18",
+   "note": "agy 用；AA 对 Opus 4.6 只有 Max 和 Non-reasoning 两档，thinking 按唯一的推理档 Max 计（agy 实际 effort 未核实）；没有 TB4.0 和 Agentic，score_one 两项都缺时不查 agentic 门槛，63.8 只略高于 60，属勉强生产级；tb_hard=AA 测 Terminal-Bench Hard 46.2%（仅参考，不计分）",
+   "tb_hard": 46.2
+  },
+  "gemini-3.8-flash-high": {
+   "score": 81.8,
+   "aa": 40.9,
+   "tb": 19.7,
+   "agentic": 40.2,
+   "evidence": "openrouter_aa",
+   "tier": "AA High",
+   "source": "https://openrouter.ai/google/gemini-3.8-flash （AA: Gemini 3.8 Flash (High) Intelligence 40.9 / TB4.0 19.7% / Agentic 40.2）",
+   "date": "2026-10-18",
+   "note": "agy 用"
+  },
+  "gemini-3.8-flash-medium": {
+   "score": 79.6,
+   "aa": 39.8,
+   "tb": 19.7,
+   "agentic": 39.7,
+   "evidence": "openrouter_aa",
+   "tier": "AA Medium",
+   "source": "https://openrouter.ai/google/gemini-3.8-flash （AA: Gemini 3.8 Flash (Medium) 39.8 / TB4.0 19.7% / Agentic 39.7）",
+   "date": "2026-10-18"
+  },
+  "gemini-3.8-flash-low": {
+   "score": 67.0,
+   "aa": 33.5,
+   "tb": 10.1,
+   "agentic": 32.6,
+   "evidence": "openrouter_aa",
+   "tier": "AA Low",
+   "source": "https://openrouter.ai/google/gemini-3.8-flash （AA: Gemini 3.8 Flash (Low) 33.5 / TB4.0 10.1% / Agentic 32.6）",
+   "date": "2026-10-18"
+  },
+  "grok-4.7-high": {
+   "score": 92.6,
+   "aa": 46.3,
+   "tb": 24.7,
+   "evidence": "openrouter_aa",
+   "tier": "AA High",
+   "source": "https://openrouter.ai/x-ai/grok-4.7 （AA: Grok 4.7 (High) Intelligence 46.3 / Terminal-Bench 4.0 24.7%；OpenRouter 页未列 High 档 Agentic Index）",
+   "date": "2026-10-18",
+   "note": "cursor-agent 用（--list-models 确切 id=grok-4.7-high）；复核默认用此档，不用 Claude Opus 等贵模型除非用户明确要求"
+  },
+  "codex-v4flash": {
+   "score": 48.8,
+   "aa": 24.4,
+   "tb": 3.0,
+   "agentic": 26.3,
+   "evidence": "openrouter_aa",
+   "tier": "AA High (0420)",
+   "source": "https://openrouter.ai/deepseek/deepseek-v4-flash （AA: DeepSeek V4 Flash 0420 (High) 24.4 / TB4.0 3.0% / Agentic 26.3）",
+   "date": "2026-10-18",
+   "note": "~/.local/bin/codex-v4flash = codex -p siliconflow-v4flash，~/.codex/siliconflow-v4flash.config.toml 里 model = deepseek-ai/DeepSeek-V4-Flash（SiliconFlow），10-17 冒烟通过；按 AA 的 DeepSeek V4 Flash 0420 原版 High 档计，SiliconFlow 实际快照未核实"
+  }
+ }
+}

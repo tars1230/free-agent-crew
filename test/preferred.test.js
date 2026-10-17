@@ -74,3 +74,23 @@ test('variant in exec mode: appended once; a user --variant is never duplicated'
   crew(['exec', 'opencode', 'run', '--variant=low', 'x'], sb);
   assert.strictEqual(calls(sb)[2].argv.filter((s) => s.startsWith('--variant')).length, 1);
 });
+test('v1.3.3: with --model the preferred pin still applies after it (= opencode-auto v1.4)', () => {
+  const sb = pooled({ order: ['opencode/b'] }, { FAKE_BEHAVIOR: 'opencode/c=limit,opencode/b=limit' });
+  crew(['run', 'opencode', '--model', 'opencode/c', 'hi'], sb);
+  assert.deepStrictEqual(models(sb), ['opencode/c', 'opencode/b', 'opencode/a']);
+  assert.match(readLog(sb, 'opencode.log'), /preferred_pin=opencode\/b/);
+});
+test('v1.3.3: offline builtin lists pass the gate with the builtin tables; opencode starts with preferred.order[0]', async () => {
+  const G = require('../lib/gate');
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'bi-'));
+  const keep = { ...process.env }; Object.assign(process.env, { CREW_CONFIG_DIR: path.join(dir, 'c'), CREW_STATE_DIR: path.join(dir, 's'), MODEL_BENCH_OFFLINE: '1', CREW_OPENCODE_FREE_MODELS: '', MODEL_REGION_BLOCK_FILE: path.join(dir, 'r.json') });
+  try {
+    for (const n of ['cline', 'kilo', 'opencode']) {
+      const w = W.WORKERS[n]; const g = G.apply(w.builtin, M.rankTable(w), {}, { fb: {} });
+      assert.deepStrictEqual(g.excluded.map((d) => d.model), [], n + ' builtin all pass'); assert.deepStrictEqual(g.provisional, [], n + ' no provisional');
+    }
+    const pl = await M.plan(W.WORKERS.opencode, { offline: true });
+    assert.strictEqual(pl.src, 'builtin'); assert.strictEqual(pl.avail[0], M.preferredOf(W.WORKERS.opencode).order[0]);
+    assert.ok(pl.pinned.length >= 1);
+  } finally { for (const k of Object.keys(process.env)) if (!(k in keep)) delete process.env[k]; Object.assign(process.env, keep); }
+});
