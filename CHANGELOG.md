@@ -1,5 +1,10 @@
 # 更新记录
 
+## v1.3.7（2026-10-18）
+- **对齐现网 delisted-pool**：现网 opencode-auto / cline-auto / kilo-auto 的常规候选池（BUILTIN，拉不到模型列表时用）删掉已下架的 opencode/step-5-preview-free、cline-free/step-5-preview、kilo/stepfun/step-5-preview-free（2026-10-18 已对照各家 CLI 和 API 的当前模型列表）。Node 版每个员工只有一份内置名单，v1.3.6 已经只留生产级、没有这些 ID，所以代码不用改。
+- 新增 `test/pools.test.js`：内置名单不得含已下架 ID，且每个 ID 按内置排名表都必须是生产级（kilo 为空）。测试 87 → 89。
+- 排名表里的 step-5-preview 条目保留（仍是评分历史，测试夹具也用到），不参与候选池。
+
 ## v1.3.6（2026-10-18）
 - **规划失败时的内置回落名单只用生产级**（对齐现网 opencode-auto / cline-auto / kilo-auto 的 fallback-swap）：
   - opencode 改为 deepseek-v4.1-flash-free → glm-5.3-flash-free → mimo-v2.6-flash-free；step-5-preview-free 已不在免费名单里，删掉。
