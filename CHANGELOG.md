@@ -1,5 +1,10 @@
 # 更新记录
 
+## v1.3.5（2026-10-18）
+- **规划器 30 秒封顶**（对齐现网 opencode-auto / cline-auto / kilo-auto 的 timeout-hardening）：`M.plan()` 超过 `CREW_PLAN_TIMEOUT` 秒（默认 30）还没结束，就当作规划失败（日志 `planner_failed planner_timeout 30s`），走原来的内置名单回落。判断类调用照样在回落之后过判断门，不会落到弱模型。
+- 现网另外两项改动在 crew 里已经等价，没有改代码：现网是用子进程调 model_gate.py，crew 在进程内用 `lib/gate.js` / `lib/region.js` 评分，没有子进程可挂住；现网把阻塞的 flock 改成非阻塞重试、60 秒封顶，crew 的 `util.withLock` 本来就是非阻塞的 mkdir 锁，15 秒后拆锁。
+- 测试 83 → 85：新增 `test/plantimeout.test.js`，模拟规划器卡住：普通调用 1 秒后回落内置名单并成功；判断类调用回落后仍只用生产级模型。
+
 ## v1.3.4（2026-10-18）
 - **判断类调用只用生产级**（对齐现网 opencode-auto / cline-auto / kilo-auto 的 judgement-gate 与 check_ledger 第 9 项）：判断类 = `crew review` / `crew cross` 审查员和 review 汇总，或 `AUTO_JUDGEMENT=1`（`CREW_JUDGEMENT=1`），或 `AGENT_CALLER` / `AGENT_TASK` / `AGENT_ROLE` 含 review、verdict、judge、accept、audit、verify、supervision、second-vote、复核、判断、验收、裁决。只在生产级模型间选择和切换（新 `gate.judgeGrade`：全部排名表合并、固定 baseline、status=pass 且 evidence 为 measured/openrouter_aa；`--model` 弱模型和离线内置回落同样过滤）。没有生产级 → 退出码 **78**（日志 `judgement_no_prod`，事件 `judgement_no_prod`）；生产级用尽 → 75 并注明不退到弱模型。非判断类调用不变。
 - 测试 76 → 83：新增 `test/judgement.test.js`；review 用例给桩模型补实测排名条目；“proxy 不计票”改为直接测 `voteOf`（review 中弱 `--model` 现在会被判断门换成生产级）。

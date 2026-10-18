@@ -3,7 +3,7 @@ name: free-agent-crew
 description: Dispatch three free-model coding CLIs (cline, kilo, opencode) as a crew for independent second opinions, parallel code/document review, brainstorming, draft→critique→finalize relays and do-then-cross-review, at zero model cost. Quota/429 fallback, cooldowns, timeouts and a capability gate are automatic. Use when you want an independent review, more ideas, or to offload a self-contained subtask without spending your own tokens.
 license: MIT
 metadata:
-  version: "1.3.4"
+  version: "1.3.5"
 ---
 <!-- free-agent-crew-skill v2 -->
 
