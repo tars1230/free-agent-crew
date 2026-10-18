@@ -1,5 +1,14 @@
 # 更新记录
 
+## v1.3.6（2026-10-18）
+- **规划失败时的内置回落名单只用生产级**（对齐现网 opencode-auto / cline-auto / kilo-auto 的 fallback-swap）：
+  - opencode 改为 deepseek-v4.1-flash-free → glm-5.3-flash-free → mimo-v2.6-flash-free；step-5-preview-free 已不在免费名单里，删掉。
+  - cline 只留 mimo-v2.6-flash：删掉 muse-spark（只有 proxy 证据）和已下架的 step-5-preview。
+  - kilo 清空：2026-10-18 kilo 没有生产级免费模型，step-5-preview、ling-3.1-flash 已改为收费。
+  - 回落时不管是不是判断类调用，都再按 `gate.judgeGrade` 过滤一次，`--model` 指定的保留。没有剩下的模型 → 退出码 75，日志 `fallback_drop` / `fallback_grade_failed`，不会用到弱模型。
+- `data/opencode-model-rank.json`、`data/kilo-model-rank.json` 与现网同步：big-pickle、longcat-2.5-preview、space-bunny、glyph-cluster 标 `rating: unrated`，xing4.0-29b-a4b 标 `vendor_reported`，并附 `public_scores` / `sources`；score 和 evidence 不变，门槛判定不变。
+- 测试 85 → 87（`test/plantimeout.test.js`）：opencode 回落的生产级模型全部限额时退出 75，不调弱模型；cline 回落用 mimo；kilo 回落为空时退出 75，零调用。
+
 ## v1.3.5（2026-10-18）
 - **规划器 30 秒封顶**（对齐现网 opencode-auto / cline-auto / kilo-auto 的 timeout-hardening）：`M.plan()` 超过 `CREW_PLAN_TIMEOUT` 秒（默认 30）还没结束，就当作规划失败（日志 `planner_failed planner_timeout 30s`），走原来的内置名单回落。判断类调用照样在回落之后过判断门，不会落到弱模型。
 - 现网另外两项改动在 crew 里已经等价，没有改代码：现网是用子进程调 model_gate.py，crew 在进程内用 `lib/gate.js` / `lib/region.js` 评分，没有子进程可挂住；现网把阻塞的 flock 改成非阻塞重试、60 秒封顶，crew 的 `util.withLock` 本来就是非阻塞的 mkdir 锁，15 秒后拆锁。

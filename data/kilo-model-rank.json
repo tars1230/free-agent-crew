@@ -52,7 +52,16 @@
    "score": 50,
    "evidence": "none",
    "source": "隐身模型，无任何公开评测（2026-10-16 查询）；试用期，排在达标模型之后，本机反馈决定去留",
-   "date": "2026-10-16"
+   "date": "2026-10-16",
+   "rating": "unrated",
+   "public_scores": "无官方、AA 评测。仅第三方自测：DeepSWE v1.1 pass@1 2.7%（xhigh，非官方榜单）；GPQA Diamond 55 题子集 56.4%",
+   "sources": [
+    "https://huggingface.co/datasets/ProCreations/glyph-cluster-deepswe-traces",
+    "https://stealthmodels.com/glyph-cluster",
+    "https://freemodels.byluc.in/models/stealth/glyph-cluster"
+   ],
+   "score_basis": "试用期占位分，不是评测分：门槛需要一个数，evidence=none/vendor 使其按 provisional 处理、判断类不计生产级（2026-10-18 核查后保持不变）",
+   "rated_on": "2026-10-18"
   },
   "kilo/cohere/north-mini-code:free": {
    "score": 19.8,
@@ -117,7 +126,16 @@
    "score": 50,
    "evidence": "vendor",
    "source": "无 AA/OpenRouter 评测。中国电信星辰自报 SWE-bench Verified 75.0、Terminal-Bench 2.1 57.5（huggingface.co/XingChen-AGI/Xing4.0-29B-A4B），与 Qwen3.6-35B-A3B 同档；29B/4B 小模型 → 试用期 50，本机反馈决定去留",
-   "date": "2026-10-17"
+   "date": "2026-10-17",
+   "rating": "vendor_reported",
+   "public_scores": "只有厂商自报（官方模型卡）：SWE-bench Verified 75.0（SWE-agent harness）、Terminal-Bench 2.1 57.5（terminus-2，3 次平均）、SWE-bench Multilingual 66.0、Tau3-Bench 64.63、AA.LCR 61.0（厂商自测，不是 AA 指数）。无 AA Intelligence Index，OpenRouter benchmarks=null，未换算成门槛分",
+   "sources": [
+    "https://huggingface.co/XingChen-AGI/Xing4.0-29B-A4B",
+    "https://github.com/XingChen-AGI/Xing4.0-29B-A4B",
+    "https://openrouter.ai/api/v1/models"
+   ],
+   "score_basis": "试用期占位分，不是评测分：门槛需要一个数，evidence=none/vendor 使其按 provisional 处理、判断类不计生产级（2026-10-18 核查后保持不变）",
+   "rated_on": "2026-10-18"
   }
  }
 }

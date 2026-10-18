@@ -59,13 +59,31 @@
    "score": 50,
    "evidence": "none",
    "source": "无官方/AA 评测（benchmarklist、openvibeeval 均为 —，2026-10-16 查询）；前代 LongCat 2.0 AA 19.1/Agentic 14；第三方 AI Coding Daily 10-02 经 OpenCode 测 46.65/80 第 36（与 GLM-5.3-Flash 相当）→ 试用期 50",
-   "date": "2026-10-16"
+   "date": "2026-10-16",
+   "rating": "unrated",
+   "public_scores": "无任何公开评测：美团未发布，Artificial Analysis 只收录 LongCat 2.0（AA 19），没有 2.5；OpenRouter 只有 meituan/longcat-2.0（2026-10-18 核对）",
+   "sources": [
+    "https://www.orcarouter.ai/blog/longcat-2-5",
+    "https://artificialanalysis.ai/models/longcat-2-0",
+    "https://openvibeeval.com/models/longcat-v2-5-preview/"
+   ],
+   "score_basis": "试用期占位分，不是评测分：门槛需要一个数，evidence=none/vendor 使其按 provisional 处理、判断类不计生产级（2026-10-18 核查后保持不变）",
+   "rated_on": "2026-10-18"
   },
   "opencode/big-pickle": {
    "score": 55,
    "evidence": "none",
    "source": "OpenCode Zen 隐身模型，背后模型会变（2026-08 传为 DeepSeek V4 Flash）；无 AA；第三方 fellipesoares.com.br 10 月测 Terminal-Bench 71% → 试用期 55（2026-10-16）",
-   "date": "2026-10-16"
+   "date": "2026-10-16",
+   "rating": "unrated",
+   "public_scores": "无官方、AA、OpenRouter 评测（OpenRouter /api/v1/models 无此模型，2026-10-18）。仅有第三方单次子集测试，不计分：Fellipe Soares 5 项子集（HLE 38%、SciCode 44%、Terminal-Bench 2.1 14 题 71%、SWE-bench Verified Mini 20 题 65%）；PhillipChaffee 自测 SWE-Atlas Codebase QnA 50.8%（63/124，单次，非官方）。背后模型会变",
+   "sources": [
+    "https://fellipesoares.com.br/en/opencode-stealth-models-benchmarks/",
+    "https://github.com/PhillipChaffee/big-pickle-swe-atlas",
+    "https://opencode.ai/v2/docs/console/models/"
+   ],
+   "score_basis": "试用期占位分，不是评测分：门槛需要一个数，evidence=none/vendor 使其按 provisional 处理、判断类不计生产级（2026-10-18 核查后保持不变）",
+   "rated_on": "2026-10-18"
   },
   "opencode/nemotron-3-ultra-free": {
    "score": 45.8,
@@ -79,7 +97,16 @@
    "score": 50,
    "evidence": "none",
    "source": "隐身模型，无公开评测（2026-10-16）；试用期",
-   "date": "2026-10-16"
+   "date": "2026-10-16",
+   "rating": "unrated",
+   "public_scores": "无官方、AA 评测（OpenRouter 路由已于 10-05 下线）。仅第三方：AI Coding Daily 57.19/80（经 OpenCode，09-30）；Fellipe Soares 子集（HLE 28%、SciCode 40%、TB 2.1 64%、SWE-Mini 75%）。freetokens 的「EST 43–48」是推算，不采用",
+   "sources": [
+    "https://aicodingdaily.com/model/space-bunny",
+    "https://fellipesoares.com.br/en/opencode-stealth-models-benchmarks/",
+    "https://spacebunnyalpha.com/"
+   ],
+   "score_basis": "试用期占位分，不是评测分：门槛需要一个数，evidence=none/vendor 使其按 provisional 处理、判断类不计生产级（2026-10-18 核查后保持不变）",
+   "rated_on": "2026-10-18"
   },
   "opencode/cat-jam-free": {
    "score": 50,

@@ -4,7 +4,7 @@
 自动发现免费模型 → 按能力排序 → 额度/429 自动换模型、换员工 → 记录冷却 → 汇总结果。单一 Node.js 实现，macOS / Linux / Windows 通用，零 npm 依赖。
 
 ## 三步上手
-1. **拿到 zip 并安装**：`free-agent-crew-1.3.5.zip` 可以来自 GitHub Release（私有仓库，要先 `gh auth login`，再运行 `gh release download -R tars1230/free-agent-crew -p 'free-agent-crew-[0-9]*.zip'` 下载最新版）、网盘，或别人直接发给你。解压到 Downloads 后运行（命令见下方「一句话安装」）：macOS / Linux 用 `sh ~/Downloads/free-agent-crew/install.sh`，Windows 用 `powershell -ExecutionPolicy Bypass -File $HOME\Downloads\free-agent-crew\install.ps1`。要状态栏或托盘就加 `--tray`。国内网络先看 [docs/REQUIREMENTS.md](docs/REQUIREMENTS.md) 设置代理或镜像。
+1. **拿到 zip 并安装**：`free-agent-crew-1.3.6.zip` 可以来自 GitHub Release（私有仓库，要先 `gh auth login`，再运行 `gh release download -R tars1230/free-agent-crew -p 'free-agent-crew-[0-9]*.zip'` 下载最新版）、网盘，或别人直接发给你。解压到 Downloads 后运行（命令见下方「一句话安装」）：macOS / Linux 用 `sh ~/Downloads/free-agent-crew/install.sh`，Windows 用 `powershell -ExecutionPolicy Bypass -File $HOME\Downloads\free-agent-crew\install.ps1`。要状态栏或托盘就加 `--tray`。国内网络先看 [docs/REQUIREMENTS.md](docs/REQUIREMENTS.md) 设置代理或镜像。
 2. **登录 cline（只要一次）**：新开一个终端，运行 `cline auth`，在浏览器登录 Cline 账号（免费注册）。kilo 和 opencode 不用登录。然后运行 `crew doctor`，“需要你做的事”为空就好了。
 3. **让总控 agent 派活**：安装器已经把 skill 装进本机已有的 Claude Code / Codex / WorkBuddy 等技能目录，直接对总控 agent 说“用 free-agent-crew 让免费员工复核 src/x.ts”即可；可复制的派单模板在 [prompts/](prompts/README.md)。想看谁还有额度：运行 `crew quota`。
 
@@ -14,7 +14,7 @@
 
 | 板块 | 目录 | 用途 | 入口 |
 |---|---|---|---|
-| 工具 / 安装包 | `bin/` `lib/` `install.sh` `install.ps1` `data/` `test/` | `crew` 命令本体：调度、额度切换、能力门槛、体检、跨平台安装 | 下载 `free-agent-crew-1.3.5.zip` → 运行安装脚本（见下） |
+| 工具 / 安装包 | `bin/` `lib/` `install.sh` `install.ps1` `data/` `test/` | `crew` 命令本体：调度、额度切换、能力门槛、体检、跨平台安装 | 下载 `free-agent-crew-1.3.6.zip` → 运行安装脚本（见下） |
 | Skill | `skills/free-agent-crew/`（`SKILL.md` + `references/`） | 让 Claude Code、Codex、WorkBuddy/CodeBuddy、Hermes、opencode、cline、kilo 等 agent 知道何时、怎样派活给 `crew` | 安装脚本自动装到各 agent 的技能目录；只装 skill：解压 `free-agent-crew-skill-1.3.4.zip` 到技能目录 |
 | 提示词 | `prompts/` | 给总控 agent 直接复制的派单模板：新设备安装、单员工、互审、脑暴、接力、做-审分离 | 打开 [`prompts/README.md`](prompts/README.md) |
 
@@ -23,11 +23,11 @@
 ## 一句话安装
 macOS / Linux：
 ```sh
-unzip -o free-agent-crew-1.3.5.zip -d ~/Downloads && sh ~/Downloads/free-agent-crew/install.sh
+unzip -o free-agent-crew-1.3.6.zip -d ~/Downloads && sh ~/Downloads/free-agent-crew/install.sh
 ```
 Windows（PowerShell）：
 ```powershell
-Expand-Archive -Force free-agent-crew-1.3.5.zip $HOME\Downloads; powershell -ExecutionPolicy Bypass -File $HOME\Downloads\free-agent-crew\install.ps1
+Expand-Archive -Force free-agent-crew-1.3.6.zip $HOME\Downloads; powershell -ExecutionPolicy Bypass -File $HOME\Downloads\free-agent-crew\install.ps1
 ```
 安装器是幂等的，重复运行=修复/升级。参数：`--no-cli`（不装三个 CLI）`--no-path` `--no-skills` `--upgrade`（升级 CLI）`--registry URL`（也可设环境变量 `CREW_NPM_REGISTRY`）`--force`（覆盖同名技能）`--tray` / `--uninstall-tray`。Node 下载镜像用 `CREW_NODE_MIRROR`，代理用 `HTTPS_PROXY`，详见 [docs/REQUIREMENTS.md](docs/REQUIREMENTS.md)。
 
@@ -78,6 +78,7 @@ cline-auto|kilo-auto|opencode-auto ...   # 与原 CLI 参数一致 + 自动换�
 5. 判断类调用只用生产级（v1.3.4，对齐现网 opencode-auto / cline-auto / kilo-auto 的 judgement-gate）：`crew review`、`crew cross` 的审查员和 review 汇总，以及环境变量 `AUTO_JUDGEMENT=1`（或 `CREW_JUDGEMENT=1`）、`AGENT_CALLER` / `AGENT_TASK` / `AGENT_ROLE` 含 review、verify、accept、audit、supervision、复核、验收、判断、裁决等词的调用，只在生产级模型（过门槛且 evidence 为 measured/openrouter_aa，按全部排名表、固定 baseline 判定）之间选择和切换；`--model` 指定弱模型也会被丢弃。候选里没有生产级 → 退出码 78 并写日志（`judgement_gate` / `judgement_no_prod`），不会退到弱模型；生产级都用尽 → 75。其它调用不变，kilo 照常干活。
 
 6. 规划器 30 秒封顶（v1.3.5，对齐现网三个包装器的 timeout-hardening）：取模型名单 / 排序超过 `CREW_PLAN_TIMEOUT` 秒（默认 30）就按规划失败处理，回落到内置名单；判断类调用回落后仍只用生产级。
+7. 规划失败时的内置回落名单只用生产级（v1.3.6）：opencode 依次用 deepseek-v4.1-flash、glm-5.3-flash、mimo-v2.6-flash；cline 只用 mimo-v2.6-flash；kilo 目前没有生产级免费模型，名单为空。回落后再按评分过滤一次，没有剩下的模型就退出 75，不会用到弱模型；`--model` 指定的模型照常保留。
 
 ### 首选模型 `preferred`（v1.3.2；v1.3.3 起 `--model` 时也置顶）
 排名表顶层可以有一个 `preferred` 块，只调顺序、不改分（内置的 opencode 表已带一份：首选 deepseek-v4.1-flash-free（max 档），glm-5.3-flash-free 兜底）：
