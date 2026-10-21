@@ -28,9 +28,10 @@
 - 派活写清：目标、验收命令（accept_cmd）、禁区、超时。
 
 ## 复核的标准做法
-- 只读调用：cursor-agent 用 `--mode ask`；agy 用 `-p` 并在提示词里写明“只读，不改文件”；opencode 用 `opencode-auto`（会按 `preferred` 选 deepseek，并记下实际用的模型）；crew 用 `crew review`（默认只读）。
+- 只读调用：cursor-agent 用 `--mode ask --model grok-4.7-high`；agy 用 `-p` 并在提示词里写明“只读，不改文件”；opencode 用 `opencode-auto`（会按 `preferred` 选 deepseek，并记下实际用的模型）；crew 用 `crew review`（默认只读）。
 - diff 先写到文件（例如 `git diff > /tmp/review-<id>.diff`），提示词里给路径。
 - 必须显式指定 `--model`：没写模型名的（例如 agy 默认模型）算未评分，不计票。
+- 调用 cursor-agent 必须显式写 `--model`，默认 `grok-4.7-high`；claude-opus、sonnet 等非 xAI 模型只在用户点名时用（2026-10-19 用户定；漏写 `--model` 会落到旧默认 claude-sonnet-5，占「其他模型」额度）。
 - 票的格式：`工具(模型名) APPROVE|REJECT: 一句理由`，模型名和 rank.json 里的键一致。
 
 ```bash
